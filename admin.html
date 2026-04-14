@@ -5,285 +5,216 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - HIS LIGHT Technology</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f5f5;
-            padding: 2rem;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .login-box, .admin-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        .admin-box {
-            max-width: 1200px;
-        }
-        h1, h2 {
-            color: #6b21a5;
-            margin-bottom: 1rem;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-family: inherit;
-        }
-        button {
-            background: #6b21a5;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        button:hover {
-            background: #581c87;
-        }
-        .post-item {
-            background: #f9f9f9;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .post-info {
-            flex: 2;
-        }
-        .post-actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        .delete-btn {
-            background: #dc2626;
-        }
-        .delete-btn:hover {
-            background: #b91c1c;
-        }
-        .edit-btn {
-            background: #f59e0b;
-        }
-        .edit-btn:hover {
-            background: #d97706;
-        }
-        .draft-btn {
-            background: #6b7280;
-        }
-        .draft-btn:hover {
-            background: #4b5563;
-        }
-        .publish-btn {
-            background: #10b981;
-        }
-        .publish-btn:hover {
-            background: #059669;
-        }
-        .success {
-            background: #d1fae5;
-            color: #065f46;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .logout-btn {
-            background: #6b7280;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            margin-left: 0.5rem;
-        }
-        .status-published {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .status-draft {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .filter-buttons {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-        .filter-btn {
-            background: #e5e7eb;
-            color: #374151;
-            width: auto;
-        }
-        .filter-btn.active {
-            background: #6b21a5;
-            color: white;
-        }
-        .row-2cols {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        .image-preview {
-            margin-top: 0.5rem;
-            max-width: 200px;
-        }
-        .image-preview img {
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
-        .remove-image {
-            background: #dc2626;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-            margin-top: 0.5rem;
-            width: auto;
-        }
-        .image-upload-area {
-            border: 2px dashed #ddd;
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        .image-upload-area:hover {
-            border-color: #6b21a5;
-        }
-        @media (max-width: 768px) {
-            .row-2cols {
-                grid-template-columns: 1fr;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f5; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .login-box, .admin-box { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .admin-box { max-width: 1200px; }
+        h1, h2 { color: #6b21a5; margin-bottom: 1rem; }
+        input, select, textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
+        button { background: #6b21a5; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
+        button:hover { background: #581c87; }
+        .post-item { background: #f9f9f9; padding: 1rem; margin-bottom: 1rem; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .post-info { flex: 2; }
+        .post-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .delete-btn { background: #dc2626; }
+        .edit-btn { background: #f59e0b; }
+        .draft-btn { background: #6b7280; }
+        .publish-btn { background: #10b981; }
+        .success { background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; }
+        .error { background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; margin-left: 0.5rem; }
+        .status-published { background: #d1fae5; color: #065f46; }
+        .status-draft { background: #fef3c7; color: #92400e; }
+        .filter-buttons { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .filter-btn { background: #e5e7eb; color: #374151; width: auto; }
+        .filter-btn.active { background: #6b21a5; color: white; }
+        .row-2cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .image-preview { margin-top: 0.5rem; max-width: 200px; }
+        .image-preview img { width: 100%; border-radius: 10px; border: 1px solid #ddd; }
+        .image-upload-area { border: 2px dashed #ddd; padding: 1rem; border-radius: 10px; text-align: center; cursor: pointer; }
+        .spinner-small { display: inline-block; width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 768px) { .row-2cols { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="container" id="app"></div>
 
     <script>
-        const CORRECT_PASSWORD = "admin123";
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbzQfCvMGCwrq4LKZu7TOd2WSRQ7ZX5Z83VSqWnabtijvTV961xKhZ-U0rbu-p0O7GLOJg/exec";
+        const PASSWORD = "admin123";
+        const CACHE_KEY = 'blog_posts_cache';
+        const CACHE_TIME_KEY = 'blog_posts_cache_time';
+        const ONE_MINUTE = 60 * 1000; // Cache lasts 1 minute in admin (so changes appear quickly)
+        
         let isLoggedIn = false;
         let currentFilter = 'all';
         let editingPostId = null;
         let currentImageData = null;
+        let blogPosts = [];
+        let isLoading = false;
+
+        // ============================================
+        // CORE FUNCTIONS - Read/Write from Google Sheets
+        // ============================================
         
-        function getPosts() {
-            const posts = localStorage.getItem('blogPosts');
-            if (posts) {
-                return JSON.parse(posts);
-            } else {
-                const defaultPosts = [
-                    {
-                        id: 1,
-                        title: "How AI is Transforming SaaS in 2026",
-                        date: "2026-04-10",
-                        category: "AI",
-                        excerpt: "Discover the top AI trends reshaping software-as-a-service...",
-                        content: "<p>Artificial Intelligence is revolutionizing the SaaS industry...</p>",
-                        image: null,
-                        status: "published"
-                    },
-                    {
-                        id: 2,
-                        title: "5 Mobile App Development Trends for 2026",
-                        date: "2026-04-05",
-                        category: "Mobile",
-                        excerpt: "From AI integration to super apps, learn what's next...",
-                        content: "<p>Mobile app development is evolving rapidly...</p>",
-                        image: null,
-                        status: "published"
+        // Load posts from cache or Google Sheets
+        async function loadPostsFromSheet(forceRefresh = false) {
+            if (isLoading) return blogPosts;
+            isLoading = true;
+            
+            // Show loading indicator on dashboard
+            const filterDiv = document.querySelector('.filter-buttons');
+            if (filterDiv && !forceRefresh) {
+                // Don't show loading on auto-refresh
+            }
+            
+            try {
+                // Check cache first (unless force refresh)
+                if (!forceRefresh) {
+                    const cachedPosts = localStorage.getItem(CACHE_KEY);
+                    const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
+                    const cacheAge = cacheTime ? Date.now() - parseInt(cacheTime) : ONE_MINUTE + 1;
+                    
+                    if (cachedPosts && cacheAge < ONE_MINUTE) {
+                        console.log("Admin: Loading from cache");
+                        blogPosts = JSON.parse(cachedPosts);
+                        isLoading = false;
+                        return blogPosts;
                     }
-                ];
-                localStorage.setItem('blogPosts', JSON.stringify(defaultPosts));
-                return defaultPosts;
+                }
+                
+                console.log("Admin: Fetching fresh data from Google Sheets...");
+                const response = await fetch(API_URL);
+                const posts = await response.json();
+                console.log(`Admin: Loaded ${posts.length} posts`);
+                
+                // Update cache
+                localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
+                localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                
+                blogPosts = posts;
+                isLoading = false;
+                return posts;
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                isLoading = false;
+                return blogPosts;
             }
         }
-        
-        function savePosts(posts) {
-            localStorage.setItem('blogPosts', JSON.stringify(posts));
+
+        // Save post to Google Sheets
+        async function savePostToSheet(post) {
+            const saveBtn = document.activeElement;
+            const originalText = saveBtn.innerHTML;
+            
+            try {
+                // Show saving indicator
+                if (saveBtn && saveBtn.tagName === 'BUTTON') {
+                    saveBtn.innerHTML = '<span class="spinner-small"></span> Saving...';
+                    saveBtn.disabled = true;
+                }
+                
+                const params = new URLSearchParams({
+                    action: 'save',
+                    id: post.id,
+                    title: post.title,
+                    date: post.date,
+                    category: post.category,
+                    excerpt: post.excerpt,
+                    content: post.content,
+                    image: post.image || '',
+                    status: post.status
+                });
+                
+                const url = `${API_URL}?${params.toString()}`;
+                await fetch(url, { method: 'GET', mode: 'no-cors' });
+                
+                // Clear cache so next load gets fresh data
+                localStorage.removeItem(CACHE_KEY);
+                localStorage.removeItem(CACHE_TIME_KEY);
+                
+                if (saveBtn && saveBtn.tagName === 'BUTTON') {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error saving post:', error);
+                if (saveBtn && saveBtn.tagName === 'BUTTON') {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                }
+                return false;
+            }
         }
+
+        // Delete post from Google Sheets
+        async function deletePostFromSheet(id) {
+            try {
+                const url = `${API_URL}?action=delete&id=${id}`;
+                await fetch(url, { method: 'GET', mode: 'no-cors' });
+                
+                // Clear cache
+                localStorage.removeItem(CACHE_KEY);
+                localStorage.removeItem(CACHE_TIME_KEY);
+                
+                return true;
+            } catch (error) {
+                console.error('Error deleting post:', error);
+                return false;
+            }
+        }
+
+        // ============================================
+        // UI FUNCTIONS
+        // ============================================
         
         function showMessage(msg, type) {
             const msgDiv = document.getElementById('message');
             if (msgDiv) {
                 msgDiv.innerHTML = `<div class="${type}">${msg}</div>`;
-                setTimeout(() => {
-                    if (msgDiv) msgDiv.innerHTML = '';
-                }, 3000);
+                setTimeout(() => { if (msgDiv) msgDiv.innerHTML = ''; }, 3000);
             }
         }
-        
-        function deletePost(id) {
-            if (confirm('Delete this post?')) {
-                let posts = getPosts();
-                posts = posts.filter(p => p.id !== id);
-                savePosts(posts);
+
+        async function deletePost(id) {
+            if (confirm('Delete this post permanently?')) {
+                showMessage('Deleting post...', 'success');
+                await deletePostFromSheet(id);
+                await renderAdminPanel(true); // Force refresh
                 showMessage('Post deleted!', 'success');
-                renderAdminPanel();
             }
         }
-        
-        function changeStatus(id, newStatus) {
-            let posts = getPosts();
-            const index = posts.findIndex(p => p.id === id);
-            if (index !== -1) {
-                posts[index].status = newStatus;
-                savePosts(posts);
+
+        async function changeStatus(id, newStatus) {
+            const post = blogPosts.find(p => p.id == id);
+            if (post) {
+                post.status = newStatus;
+                showMessage(`Updating post status...`, 'success');
+                await savePostToSheet(post);
+                await renderAdminPanel(true); // Force refresh
                 showMessage(`Post ${newStatus === 'published' ? 'published!' : 'moved to drafts!'}`, 'success');
-                renderAdminPanel();
             }
         }
-        
+
         function setEditPost(id) {
-            const posts = getPosts();
-            const post = posts.find(p => p.id === id);
+            const post = blogPosts.find(p => p.id == id);
             if (post) {
                 editingPostId = post.id;
                 currentImageData = post.image || null;
                 renderPostForm(post);
             }
         }
-        
+
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (file && file.type.startsWith('image/')) {
@@ -292,30 +223,23 @@
                     currentImageData = e.target.result;
                     const previewDiv = document.getElementById('imagePreview');
                     if (previewDiv) {
-                        previewDiv.innerHTML = `
-                            <div class="image-preview">
-                                <img src="${currentImageData}" alt="Preview">
-                                <button type="button" class="remove-image" onclick="removeImage()">Remove Image</button>
-                            </div>
-                        `;
+                        previewDiv.innerHTML = `<div class="image-preview"><img src="${currentImageData}" alt="Preview"><button type="button" onclick="removeImage()">Remove Image</button></div>`;
                     }
                 };
                 reader.readAsDataURL(file);
             } else {
-                alert('Please select a valid image file (JPEG, PNG, GIF)');
+                alert('Please select a valid image file');
             }
         }
-        
+
         function removeImage() {
             currentImageData = null;
             const previewDiv = document.getElementById('imagePreview');
-            if (previewDiv) {
-                previewDiv.innerHTML = '';
-            }
+            if (previewDiv) previewDiv.innerHTML = '';
             const fileInput = document.getElementById('imageInput');
             if (fileInput) fileInput.value = '';
         }
-        
+
         function renderLogin() {
             document.getElementById('app').innerHTML = `
                 <div class="login-box" style="max-width: 500px; margin: 0 auto;">
@@ -327,95 +251,61 @@
                 </div>
             `;
         }
-        
-        function login() {
+
+        async function login() {
             const password = document.getElementById('password').value;
-            if (password === CORRECT_PASSWORD) {
+            if (password === PASSWORD) {
                 isLoggedIn = true;
-                renderAdminPanel();
+                await renderAdminPanel();
             } else {
                 showMessage('Wrong password! Try: admin123', 'error');
             }
         }
-        
+
         function logout() {
             isLoggedIn = false;
             renderLogin();
         }
-        
-        function renderPostForm(postData = null) {
-            let post;
-            if (postData) {
-                post = postData;
-                currentImageData = post.image || null;
-            } else {
-                post = { 
-                    id: null,
-                    title: '', 
-                    date: new Date().toISOString().split('T')[0], 
-                    category: 'AI', 
-                    excerpt: '', 
-                    content: '',
-                    image: null,
-                    status: 'draft'
-                };
-                currentImageData = null;
-            }
+
+        function renderPostForm(post = null) {
+            const p = post || { id: null, title: '', date: new Date().toISOString().split('T')[0], category: 'AI', excerpt: '', content: '', image: null, status: 'draft' };
             
             document.getElementById('app').innerHTML = `
                 <div class="admin-box">
                     <div class="header">
-                        <h2>${post.id ? '✏️ Edit Post' : '📝 Create New Post'}</h2>
-                        <button class="logout-btn" onclick="renderAdminPanel()">← Back to Dashboard</button>
+                        <h2>${p.id ? '✏️ Edit Post' : '📝 Create New Post'}</h2>
+                        <button onclick="renderAdminPanel()">← Back to Dashboard</button>
                     </div>
                     <div id="message"></div>
-                    <div class="form-group">
-                        <label>Title *</label>
-                        <input type="text" id="title" value="${escapeHtml(post.title)}">
-                    </div>
+                    <div class="form-group"><label>Title *</label><input type="text" id="title" value="${escapeHtml(p.title)}"></div>
                     <div class="row-2cols">
-                        <div class="form-group">
-                            <label>Date *</label>
-                            <input type="date" id="date" value="${post.date}">
-                        </div>
-                        <div class="form-group">
-                            <label>Category *</label>
+                        <div class="form-group"><label>Date *</label><input type="date" id="date" value="${p.date}"></div>
+                        <div class="form-group"><label>Category *</label>
                             <select id="category">
-                                <option value="AI" ${post.category === 'AI' ? 'selected' : ''}>🤖 AI</option>
-                                <option value="SaaS" ${post.category === 'SaaS' ? 'selected' : ''}>☁️ SaaS</option>
-                                <option value="Mobile" ${post.category === 'Mobile' ? 'selected' : ''}>📱 Mobile</option>
-                                <option value="Marketing" ${post.category === 'Marketing' ? 'selected' : ''}>📈 Marketing</option>
-                                <option value="Career" ${post.category === 'Career' ? 'selected' : ''}>🎓 Career</option>
+                                <option value="AI" ${p.category === 'AI' ? 'selected' : ''}>🤖 AI</option>
+                                <option value="SaaS" ${p.category === 'SaaS' ? 'selected' : ''}>☁️ SaaS</option>
+                                <option value="Mobile" ${p.category === 'Mobile' ? 'selected' : ''}>📱 Mobile</option>
+                                <option value="Marketing" ${p.category === 'Marketing' ? 'selected' : ''}>📈 Marketing</option>
+                                <option value="Career" ${p.category === 'Career' ? 'selected' : ''}>🎓 Career</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Featured Image (Optional)</label>
-                        <div class="image-upload-area" onclick="document.getElementById('imageInput').click()">
-                            <p>📸 Click to upload an image</p>
-                            <p style="font-size: 0.75rem; color: #666;">PNG, JPG, GIF up to 2MB</p>
-                        </div>
-                        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
-                        <div id="imagePreview">
-                            ${currentImageData ? `<div class="image-preview"><img src="${currentImageData}" alt="Preview"><button type="button" class="remove-image" onclick="removeImage()">Remove Image</button></div>` : ''}
-                        </div>
+                        <label>Featured Image</label>
+                        <div class="image-upload-area" onclick="document.getElementById('imageInput').click()">📸 Click to upload an image</div>
+                        <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+                        <div id="imagePreview">${currentImageData ? `<div class="image-preview"><img src="${currentImageData}" alt="Preview"><button onclick="removeImage()">Remove Image</button></div>` : ''}</div>
                     </div>
-                    <div class="form-group">
-                        <label>Excerpt (short preview) *</label>
-                        <textarea id="excerpt" rows="3">${escapeHtml(post.excerpt)}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Full Content (HTML allowed) *</label>
-                        <textarea id="content" rows="10">${escapeHtml(post.content)}</textarea>
-                    </div>
+                    <div class="form-group"><label>Excerpt *</label><textarea id="excerpt" rows="3">${escapeHtml(p.excerpt)}</textarea></div>
+                    <div class="form-group"><label>Full Content *</label><textarea id="content" rows="10">${escapeHtml(p.content)}</textarea></div>
                     <div class="row-2cols">
-                        <button onclick="savePost('draft')" style="background:#6b7280;">💾 Save as Draft</button>
-                        <button onclick="savePost('published')" style="background:#10b981;">🚀 Publish Now</button>
+                        <button onclick="savePost('draft')">💾 Save as Draft</button>
+                        <button onclick="savePost('published')">🚀 Publish Now</button>
                     </div>
                 </div>
             `;
         }
-        
+
         function escapeHtml(text) {
             if (!text) return '';
             return text.replace(/[&<>]/g, function(m) {
@@ -425,8 +315,8 @@
                 return m;
             });
         }
-        
-        function savePost(status) {
+
+        async function savePost(status) {
             const title = document.getElementById('title').value;
             const date = document.getElementById('date').value;
             const category = document.getElementById('category').value;
@@ -438,90 +328,86 @@
                 return;
             }
             
-            let posts = getPosts();
+            let newId = editingPostId;
+            if (!newId) {
+                const maxId = blogPosts.length > 0 ? Math.max(...blogPosts.map(p => parseInt(p.id))) : 0;
+                newId = maxId + 1;
+            }
             
-            if (editingPostId) {
-                const index = posts.findIndex(p => p.id === editingPostId);
-                if (index !== -1) {
-                    posts[index] = { 
-                        ...posts[index], 
-                        title, 
-                        date, 
-                        category, 
-                        excerpt, 
-                        content,
-                        image: currentImageData,
-                        status: status
-                    };
-                }
+            const post = {
+                id: newId,
+                title: title,
+                date: date,
+                category: category,
+                excerpt: excerpt,
+                content: content,
+                image: currentImageData || '',
+                status: status
+            };
+            
+            const success = await savePostToSheet(post);
+            
+            if (success) {
+                showMessage(status === 'published' ? '✅ Post published!' : '✅ Draft saved!', 'success');
                 editingPostId = null;
-                showMessage(status === 'published' ? 'Post updated and published!' : 'Post updated and saved as draft!', 'success');
+                currentImageData = null;
+                await renderAdminPanel(true); // Force refresh
             } else {
-                const newId = Math.max(...posts.map(p => p.id), 0) + 1;
-                posts.push({ 
-                    id: newId, 
-                    title, 
-                    date, 
-                    category, 
-                    excerpt, 
-                    content,
-                    image: currentImageData,
-                    status: status
-                });
-                showMessage(status === 'published' ? 'Post published!' : 'Post saved as draft!', 'success');
+                showMessage('❌ Error saving to Google Sheets.', 'error');
             }
-            
-            savePosts(posts);
-            currentImageData = null;
-            renderAdminPanel();
         }
-        
-        function setFilter(filter) {
-            currentFilter = filter;
-            renderAdminPanel();
-        }
-        
-        function renderAdminPanel() {
-            let posts = getPosts();
+
+        async function renderAdminPanel(forceRefresh = false) {
+            // Show loading on dashboard
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="admin-box">
+                    <div class="header">
+                        <h1>📝 Blog Admin Dashboard</h1>
+                        <div>
+                            <button onclick="renderPostForm(null)">+ New Post</button>
+                            <button onclick="logout()" style="background:#6b7280;">Logout</button>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 50px;">
+                        <div class="spinner-small" style="width: 30px; height: 30px; border-width: 3px;"></div>
+                        <p style="margin-top: 1rem;">Loading dashboard...</p>
+                    </div>
+                </div>
+            `;
             
-            let filteredPosts = posts;
-            if (currentFilter === 'published') {
-                filteredPosts = posts.filter(p => p.status === 'published');
-            } else if (currentFilter === 'draft') {
-                filteredPosts = posts.filter(p => p.status === 'draft');
-            }
+            // Load fresh data
+            await loadPostsFromSheet(forceRefresh);
             
-            const publishedCount = posts.filter(p => p.status === 'published').length;
-            const draftCount = posts.filter(p => p.status === 'draft').length;
+            let filteredPosts = blogPosts;
+            if (currentFilter === 'published') filteredPosts = blogPosts.filter(p => p.status === 'published');
+            if (currentFilter === 'draft') filteredPosts = blogPosts.filter(p => p.status === 'draft');
+            
+            const publishedCount = blogPosts.filter(p => p.status === 'published').length;
+            const draftCount = blogPosts.filter(p => p.status === 'draft').length;
             
             document.getElementById('app').innerHTML = `
                 <div class="admin-box">
                     <div class="header">
                         <h1>📝 Blog Admin Dashboard</h1>
                         <div>
-                            <button onclick="renderPostForm(null)" style="width: auto; margin-right: 0.5rem;">+ New Post</button>
-                            <button class="logout-btn" onclick="logout()" style="width: auto;">Logout</button>
+                            <button onclick="renderPostForm(null)">+ New Post</button>
+                            <button onclick="logout()" style="background:#6b7280;">Logout</button>
                         </div>
                     </div>
                     <div id="message"></div>
-                    
                     <div class="filter-buttons">
-                        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">📋 All (${posts.length})</button>
+                        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">📋 All (${blogPosts.length})</button>
                         <button class="filter-btn ${currentFilter === 'published' ? 'active' : ''}" onclick="setFilter('published')">✅ Published (${publishedCount})</button>
                         <button class="filter-btn ${currentFilter === 'draft' ? 'active' : ''}" onclick="setFilter('draft')">📝 Drafts (${draftCount})</button>
                     </div>
-                    
                     ${filteredPosts.length === 0 ? '<p style="text-align:center; padding:2rem;">No posts found. Click "New Post" to create one.</p>' : ''}
-                    
                     ${filteredPosts.sort((a,b) => b.id - a.id).map(post => `
                         <div class="post-item">
                             <div class="post-info">
                                 <strong>${escapeHtml(post.title)}</strong>
-                                <span class="status-badge ${post.status === 'published' ? 'status-published' : 'status-draft'}">
-                                    ${post.status === 'published' ? '✅ Published' : '📝 Draft'}
-                                </span>
-                                ${post.image ? '<span style="margin-left:0.5rem;">🖼️</span>' : ''}
-                                <br>
+                                <span class="status-badge ${post.status === 'published' ? 'status-published' : 'status-draft'}">${post.status === 'published' ? '✅ Published' : '📝 Draft'}</span>
+                                ${post.image ? ' 🖼️' : ''}<br>
                                 <small>📅 ${post.date} | 🏷️ ${post.category}</small>
                             </div>
                             <div class="post-actions">
@@ -534,18 +420,19 @@
                             </div>
                         </div>
                     `).join('')}
-                    
                     <div style="margin-top: 2rem; padding: 1rem; background: #f0fdf4; border-radius: 10px; font-size: 0.85rem;">
-                        💡 <strong>Image Tips:</strong><br>
-                        • Click the upload area to add an image to your post<br>
-                        • Images are stored in your browser (for testing)<br>
-                        • For live site, images will appear at the top of each blog post<br>
-                        • You can remove images by clicking "Remove Image"
+                        💡 <strong>Google Sheets Storage Active!</strong> Changes appear instantly. Cache refreshes every minute.
                     </div>
                 </div>
             `;
         }
-        
+
+        async function setFilter(filter) {
+            currentFilter = filter;
+            await renderAdminPanel();
+        }
+
+        // Start the app
         renderLogin();
     </script>
 </body>

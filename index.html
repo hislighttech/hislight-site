@@ -828,17 +828,84 @@
     <footer><p>✨ HIS LIGHT Technology — Illuminating Digital Excellence</p><p>© 2026 HIS LIGHT Technology. All rights reserved.</p></footer>
 
     <script>
-        // Blog data - will be loaded from localStorage
-        let blogPosts = [];
-        let currentFilter = "all";
-        let currentSearch = "";
+    
+// ============================================
+// BLOG FUNCTIONS - Reading from Google Sheets with Caching
+// ============================================
 
-        function getCategoryIcon(category) {
-            const icons = { AI: "🤖", SaaS: "☁️", Mobile: "📱", Marketing: "📈", Career: "🎓" };
-            return icons[category] || "📄";
+const API_URL = "https://script.google.com/macros/s/AKfycbzQfCvMGCwrq4LKZu7TOd2WSRQ7ZX5Z83VSqWnabtijvTV961xKhZ-U0rbu-p0O7GLOJg/exec";
+let blogPosts = [];
+let currentFilter = "all";
+let currentSearch = "";
+
+// Load posts from Google Sheets with caching
+async function loadBlogPosts() {
+    const CACHE_KEY = 'blog_posts_cache';
+    const CACHE_TIME_KEY = 'blog_posts_cache_time';
+    const ONE_HOUR = 60 * 60 * 1000; // 1 hour in milliseconds
+    
+    // Step 1: Check if we have cached data
+    const cachedPosts = localStorage.getItem(CACHE_KEY);
+    const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
+    const cacheAge = cacheTime ? Date.now() - parseInt(cacheTime) : ONE_HOUR + 1;
+    
+    // Step 2: If cache exists and is less than 1 hour old, use it IMMEDIATELY
+    if (cachedPosts && cacheAge < ONE_HOUR) {
+        console.log("Loading from cache (instant)");
+        const allPosts = JSON.parse(cachedPosts);
+        blogPosts = allPosts.filter(post => post.status === 'published');
+        renderBlogs();
+        console.log(`Displayed ${blogPosts.length} posts from cache`);
+    } else {
+        // Show loading indicator on first load only
+        const grid = document.getElementById('blogGrid');
+        if (grid && !cachedPosts) {
+            grid.innerHTML = '<p style="text-align:center; padding:2rem;">📡 Loading blog posts...</p>';
         }
+    }
+    
+    // Step 3: Fetch fresh data from Google Sheets (always happens in background)
+    try {
+        console.log("Fetching fresh data from Google Sheets...");
+        const response = await fetch(API_URL);
+        const allPosts = await response.json();
+        console.log(`Fetched ${allPosts.length} posts from Google Sheets`);
+        
+        // Update cache
+        localStorage.setItem(CACHE_KEY, JSON.stringify(allPosts));
+        localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+        
+        // Update displayed posts if they've changed
+        const newPublishedPosts = allPosts.filter(post => post.status === 'published');
+        
+        // Check if posts have changed (compare lengths or first post ID)
+        const currentIds = blogPosts.map(p => p.id).join(',');
+        const newIds = newPublishedPosts.map(p => p.id).join(',');
+        
+        if (currentIds !== newIds) {
+            console.log("New content detected! Updating display...");
+            blogPosts = newPublishedPosts;
+            renderBlogs();
+        } else {
+            console.log("No new content, keeping cached display");
+        }
+    } catch (error) {
+        console.error('Error fetching from Google Sheets:', error);
+        
+        // If fetch fails and we have cached data, keep using it
+        if (!cachedPosts) {
+            blogPosts = [];
+            renderBlogs();
+        }
+    }
+}
 
-       function renderBlogs() {
+function getCategoryIcon(category) {
+    const icons = { AI: "🤖", SaaS: "☁️", Mobile: "📱", Marketing: "📈", Career: "🎓" };
+    return icons[category] || "📄";
+}
+
+function renderBlogs() {
     const grid = document.getElementById('blogGrid');
     if (!grid) return;
     
@@ -850,15 +917,22 @@
         return matchesFilter && matchesSearch;
     });
 
-    if (filteredPosts.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No posts found. Try a different search term.</p>';
+    if (filteredPosts.length === 0 && blogPosts.length > 0) {
+        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No posts match your search. Try a different term.</p>';
+        return;
+    }
+    
+    if (filteredPosts.length === 0 && blogPosts.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No blog posts yet. Check back soon!</p>';
         return;
     }
 
     grid.innerHTML = filteredPosts.map(post => `
         <a href="post.html?id=${post.id}" class="blog-card" target="_blank">
             <div class="blog-image">
-                ${post.image ? `<img src="${post.image}" alt="${escapeHtml(post.title)}" style="width:100%; height:100%; object-fit:cover;">` : getCategoryIcon(post.category)}
+                ${post.image && post.image !== '' && post.image !== 'null' ? 
+                    `<img src="${post.image}" alt="${escapeHtml(post.title)}" style="width:100%; height:100%; object-fit:cover;">` : 
+                    getCategoryIcon(post.category)}
             </div>
             <div class="blog-content">
                 <span class="blog-category">${post.category}</span>
@@ -871,64 +945,37 @@
     `).join('');
 }
 
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
-        function searchBlogs() {
-            currentSearch = document.getElementById('searchInput').value;
-            renderBlogs();
-        }
-
-      function loadBlogPosts() {
-    const stored = localStorage.getItem('blogPosts');
-    if (stored) {
-        const allPosts = JSON.parse(stored);
-        // ONLY show posts with status "published"
-        blogPosts = allPosts.filter(post => post.status === 'published');
-    } else {
-        // Default published posts only
-        blogPosts = [
-            {
-                id: 1,
-                title: "How AI is Transforming SaaS in 2026",
-                date: "2026-04-10",
-                category: "AI",
-                excerpt: "Discover the top AI trends reshaping software-as-a-service...",
-                content: "<p>Artificial Intelligence is revolutionizing the SaaS industry...</p>",
-                status: "published"
-            },
-            {
-                id: 2,
-                title: "5 Mobile App Development Trends for 2026",
-                date: "2026-04-05",
-                category: "Mobile",
-                excerpt: "From AI integration to super apps, learn what's next...",
-                content: "<p>Mobile app development is evolving rapidly...</p>",
-                status: "published"
-            }
-        ];
-        localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
-    }
+function searchBlogs() {
+    currentSearch = document.getElementById('searchInput').value;
     renderBlogs();
 }
 
-        // Filter buttons
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.category;
-                renderBlogs();
-            });
+// Initialize filter buttons
+function initFilters() {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.category;
+            renderBlogs();
         });
+    });
+}
 
-        document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchBlogs();
-        });
+document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchBlogs();
+});
+
+// Load posts when page loads
+initFilters();
+loadBlogPosts();
 
         // Hamburger Menu
         const hamburger = document.getElementById('hamburger');
