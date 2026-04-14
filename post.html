@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIS LIGHT Technology | Blog Post</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            color: #1a1a2e;
+            background: #ffffff;
+        }
+
+        :root {
+            --primary: #6b21a5;
+            --primary-dark: #581c87;
+            --primary-light: #a855f7;
+        }
+
+        nav {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .back-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .post-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .post-category {
+            display: inline-block;
+            background: #f3e8ff;
+            color: var(--primary);
+            padding: 0.25rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .post-date {
+            color: #666;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content h2 {
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 1rem 0 1.5rem 2rem;
+        }
+
+        /* Social Share Buttons */
+        .social-share {
+            margin: 2rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .social-share h4 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .share-facebook { background: #1877f2; }
+        .share-twitter { background: #1da1f2; }
+        .share-linkedin { background: #0077b5; }
+        .share-instagram { background: #e4405f; }
+
+        /* Comments Section */
+        .comments-section {
+            margin: 2rem 0;
+        }
+
+        .comments-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .comment-form {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .comment-form input,
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .comment-form button {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .comment-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        .comments-list {
+            margin-top: 2rem;
+        }
+
+        .comment-item {
+            background: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .comment-date {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-text {
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .no-comments {
+            color: #999;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .cta-box a {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .post-title {
+                font-size: 1.8rem;
+            }
+            .share-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">HIS LIGHT Technology</span>
+            </div>
+            <div class="back-link">
+                <a href="index.html#blog">← Back to Blog</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="post-container" id="postContainer">
+        <div id="postContent">
+            Loading...
+        </div>
+    </div>
+
+    <footer>
+        <p>✨ HIS LIGHT Technology — Illuminating Digital Excellence</p>
+        <p>© 2026 HIS LIGHT Technology. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Get current post ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPostId = parseInt(urlParams.get('id'));
+
+        // Load and display post
+        function loadPost() {
+            const stored = localStorage.getItem('blogPosts');
+            let allPosts = stored ? JSON.parse(stored) : [];
+            
+            const post = allPosts.find(p => p.id === currentPostId && p.status === 'published');
+
+            if (post) {
+                document.title = `${post.title} | HIS LIGHT Technology`;
+                
+                let imageHtml = '';
+                if (post.image && post.image !== 'null' && post.image !== '') {
+                    imageHtml = `<div style="text-align: center; margin-bottom: 2rem;">
+                                    <img src="${post.image}" alt="${escapeHtml(post.title)}" style="max-width: 100%; max-height: 400px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); object-fit: cover;">
+                                 </div>`;
+                }
+                
+                // Get current page URL for sharing
+                const shareUrl = encodeURIComponent(window.location.href);
+                const shareTitle = encodeURIComponent(post.title);
+                
+                document.getElementById('postContent').innerHTML = `
+                    <span class="post-category">${post.category}</span>
+                    <h1 class="post-title">${escapeHtml(post.title)}</h1>
+                    <div class="post-date">📅 ${post.date}</div>
+                    ${imageHtml}
+                    <div class="post-content">${post.content}</div>
+                    
+                    <!-- Social Share Buttons -->
+                    <div class="social-share">
+                        <h4>📢 Share this article:</h4>
+                       <div class="share-buttons">
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" class="share-btn share-facebook">
+        📘 Facebook
+    </a>
+    <a href="https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}" target="_blank" class="share-btn share-twitter">
+        🐦 Twitter
+    </a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" class="share-btn share-linkedin">
+        🔗 LinkedIn
+    </a>
+    <a href="https://wa.me/?text=Check%20out%20this%20article%20from%20HIS%20LIGHT%20Tech%3A%20${shareTitle}%20-%20${shareUrl}" target="_blank" class="share-btn" style="background:#25D366;">
+        💬 WhatsApp
+    </a>
+    <a href="https://www.instagram.com/" target="_blank" class="share-btn share-instagram">
+        📷 Follow on Instagram
+    </a>
+</div>
+                    </div>
+                    
+                    <!-- Comments Section -->
+                    <div class="comments-section" id="commentsSection">
+                        <h3>💬 Comments (${getCommentsCount()})</h3>
+                        <div class="comment-form">
+                            <input type="text" id="commentName" placeholder="Your Name *">
+                            <input type="email" id="commentEmail" placeholder="Your Email (will not be published)">
+                            <textarea id="commentText" rows="4" placeholder="Write your comment... *"></textarea>
+                            <button onclick="submitComment()">Post Comment</button>
+                        </div>
+                        <div class="comments-list" id="commentsList">
+                            ${renderComments()}
+                        </div>
+                    </div>
+                    
+                    <div class="cta-box">
+                        <h3>Ready to Transform Your Business?</h3>
+                        <p>Let's discuss how HIS LIGHT Technology can help you achieve your goals.</p>
+                        <a href="index.html#consultation">Book a Free Consultation →</a>
+                    </div>
+                `;
+            } else {
+                document.getElementById('postContent').innerHTML = `
+                    <h1>Post Not Found</h1>
+                    <p>Sorry, the blog post you're looking for doesn't exist or is not published yet.</p>
+                    <a href="index.html#blog">← Back to Blog</a>
+                `;
+            }
+        }
+
+        // Comments functions
+        function getComments() {
+            const stored = localStorage.getItem(`comments_${currentPostId}`);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveComments(comments) {
+            localStorage.setItem(`comments_${currentPostId}`, JSON.stringify(comments));
+        }
+
+        function getCommentsCount() {
+            return getComments().length;
+        }
+
+        function renderComments() {
+            const comments = getComments();
+            if (comments.length === 0) {
+                return '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+            }
+            
+            return comments.map(comment => `
+                <div class="comment-item">
+                    <div class="comment-author">${escapeHtml(comment.name)}</div>
+                    <div class="comment-date">${comment.date}</div>
+                    <div class="comment-text">${escapeHtml(comment.text)}</div>
+                </div>
+            `).join('');
+        }
+
+        function submitComment() {
+            const name = document.getElementById('commentName').value.trim();
+            const email = document.getElementById('commentEmail').value.trim();
+            const text = document.getElementById('commentText').value.trim();
+            
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+            if (!text) {
+                alert('Please enter a comment');
+                return;
+            }
+            
+            const comments = getComments();
+            comments.push({
+                id: Date.now(),
+                name: name,
+                email: email || 'anonymous',
+                text: text,
+                date: new Date().toLocaleString()
+            });
+            
+            saveComments(comments);
+            
+            // Clear form
+            document.getElementById('commentName').value = '';
+            document.getElementById('commentEmail').value = '';
+            document.getElementById('commentText').value = '';
+            
+            // Refresh comments display
+            const commentsList = document.getElementById('commentsList');
+            if (commentsList) {
+                commentsList.innerHTML = renderComments();
+            }
+            
+            // Update comment count in the h3
+            const commentsSection = document.getElementById('commentsSection');
+            if (commentsSection) {
+                const h3 = commentsSection.querySelector('h3');
+                if (h3) h3.innerHTML = `💬 Comments (${getCommentsCount()})`;
+            }
+            
+            alert('Comment posted successfully!');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>

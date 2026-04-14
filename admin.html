@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - HIS LIGHT Technology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .login-box, .admin-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .admin-box {
+            max-width: 1200px;
+        }
+        h1, h2 {
+            color: #6b21a5;
+            margin-bottom: 1rem;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+        button {
+            background: #6b21a5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #581c87;
+        }
+        .post-item {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .post-info {
+            flex: 2;
+        }
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .delete-btn {
+            background: #dc2626;
+        }
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+        .edit-btn {
+            background: #f59e0b;
+        }
+        .edit-btn:hover {
+            background: #d97706;
+        }
+        .draft-btn {
+            background: #6b7280;
+        }
+        .draft-btn:hover {
+            background: #4b5563;
+        }
+        .publish-btn {
+            background: #10b981;
+        }
+        .publish-btn:hover {
+            background: #059669;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logout-btn {
+            background: #6b7280;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+        .status-published {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-draft {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: #e5e7eb;
+            color: #374151;
+            width: auto;
+        }
+        .filter-btn.active {
+            background: #6b21a5;
+            color: white;
+        }
+        .row-2cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .image-preview {
+            margin-top: 0.5rem;
+            max-width: 200px;
+        }
+        .image-preview img {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        .remove-image {
+            background: #dc2626;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            width: auto;
+        }
+        .image-upload-area {
+            border: 2px dashed #ddd;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .image-upload-area:hover {
+            border-color: #6b21a5;
+        }
+        @media (max-width: 768px) {
+            .row-2cols {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app"></div>
+
+    <script>
+        const CORRECT_PASSWORD = "admin123";
+        let isLoggedIn = false;
+        let currentFilter = 'all';
+        let editingPostId = null;
+        let currentImageData = null;
+        
+        function getPosts() {
+            const posts = localStorage.getItem('blogPosts');
+            if (posts) {
+                return JSON.parse(posts);
+            } else {
+                const defaultPosts = [
+                    {
+                        id: 1,
+                        title: "How AI is Transforming SaaS in 2026",
+                        date: "2026-04-10",
+                        category: "AI",
+                        excerpt: "Discover the top AI trends reshaping software-as-a-service...",
+                        content: "<p>Artificial Intelligence is revolutionizing the SaaS industry...</p>",
+                        image: null,
+                        status: "published"
+                    },
+                    {
+                        id: 2,
+                        title: "5 Mobile App Development Trends for 2026",
+                        date: "2026-04-05",
+                        category: "Mobile",
+                        excerpt: "From AI integration to super apps, learn what's next...",
+                        content: "<p>Mobile app development is evolving rapidly...</p>",
+                        image: null,
+                        status: "published"
+                    }
+                ];
+                localStorage.setItem('blogPosts', JSON.stringify(defaultPosts));
+                return defaultPosts;
+            }
+        }
+        
+        function savePosts(posts) {
+            localStorage.setItem('blogPosts', JSON.stringify(posts));
+        }
+        
+        function showMessage(msg, type) {
+            const msgDiv = document.getElementById('message');
+            if (msgDiv) {
+                msgDiv.innerHTML = `<div class="${type}">${msg}</div>`;
+                setTimeout(() => {
+                    if (msgDiv) msgDiv.innerHTML = '';
+                }, 3000);
+            }
+        }
+        
+        function deletePost(id) {
+            if (confirm('Delete this post?')) {
+                let posts = getPosts();
+                posts = posts.filter(p => p.id !== id);
+                savePosts(posts);
+                showMessage('Post deleted!', 'success');
+                renderAdminPanel();
+            }
+        }
+        
+        function changeStatus(id, newStatus) {
+            let posts = getPosts();
+            const index = posts.findIndex(p => p.id === id);
+            if (index !== -1) {
+                posts[index].status = newStatus;
+                savePosts(posts);
+                showMessage(`Post ${newStatus === 'published' ? 'published!' : 'moved to drafts!'}`, 'success');
+                renderAdminPanel();
+            }
+        }
+        
+        function setEditPost(id) {
+            const posts = getPosts();
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                editingPostId = post.id;
+                currentImageData = post.image || null;
+                renderPostForm(post);
+            }
+        }
+        
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImageData = e.target.result;
+                    const previewDiv = document.getElementById('imagePreview');
+                    if (previewDiv) {
+                        previewDiv.innerHTML = `
+                            <div class="image-preview">
+                                <img src="${currentImageData}" alt="Preview">
+                                <button type="button" class="remove-image" onclick="removeImage()">Remove Image</button>
+                            </div>
+                        `;
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file (JPEG, PNG, GIF)');
+            }
+        }
+        
+        function removeImage() {
+            currentImageData = null;
+            const previewDiv = document.getElementById('imagePreview');
+            if (previewDiv) {
+                previewDiv.innerHTML = '';
+            }
+            const fileInput = document.getElementById('imageInput');
+            if (fileInput) fileInput.value = '';
+        }
+        
+        function renderLogin() {
+            document.getElementById('app').innerHTML = `
+                <div class="login-box" style="max-width: 500px; margin: 0 auto;">
+                    <h2>🔐 Admin Login</h2>
+                    <div id="message"></div>
+                    <input type="password" id="password" placeholder="Enter password">
+                    <button onclick="login()">Login</button>
+                    <p style="margin-top: 1rem; color: #666; text-align: center;">Password: <strong>admin123</strong></p>
+                </div>
+            `;
+        }
+        
+        function login() {
+            const password = document.getElementById('password').value;
+            if (password === CORRECT_PASSWORD) {
+                isLoggedIn = true;
+                renderAdminPanel();
+            } else {
+                showMessage('Wrong password! Try: admin123', 'error');
+            }
+        }
+        
+        function logout() {
+            isLoggedIn = false;
+            renderLogin();
+        }
+        
+        function renderPostForm(postData = null) {
+            let post;
+            if (postData) {
+                post = postData;
+                currentImageData = post.image || null;
+            } else {
+                post = { 
+                    id: null,
+                    title: '', 
+                    date: new Date().toISOString().split('T')[0], 
+                    category: 'AI', 
+                    excerpt: '', 
+                    content: '',
+                    image: null,
+                    status: 'draft'
+                };
+                currentImageData = null;
+            }
+            
+            document.getElementById('app').innerHTML = `
+                <div class="admin-box">
+                    <div class="header">
+                        <h2>${post.id ? '✏️ Edit Post' : '📝 Create New Post'}</h2>
+                        <button class="logout-btn" onclick="renderAdminPanel()">← Back to Dashboard</button>
+                    </div>
+                    <div id="message"></div>
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="title" value="${escapeHtml(post.title)}">
+                    </div>
+                    <div class="row-2cols">
+                        <div class="form-group">
+                            <label>Date *</label>
+                            <input type="date" id="date" value="${post.date}">
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="category">
+                                <option value="AI" ${post.category === 'AI' ? 'selected' : ''}>🤖 AI</option>
+                                <option value="SaaS" ${post.category === 'SaaS' ? 'selected' : ''}>☁️ SaaS</option>
+                                <option value="Mobile" ${post.category === 'Mobile' ? 'selected' : ''}>📱 Mobile</option>
+                                <option value="Marketing" ${post.category === 'Marketing' ? 'selected' : ''}>📈 Marketing</option>
+                                <option value="Career" ${post.category === 'Career' ? 'selected' : ''}>🎓 Career</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Featured Image (Optional)</label>
+                        <div class="image-upload-area" onclick="document.getElementById('imageInput').click()">
+                            <p>📸 Click to upload an image</p>
+                            <p style="font-size: 0.75rem; color: #666;">PNG, JPG, GIF up to 2MB</p>
+                        </div>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                        <div id="imagePreview">
+                            ${currentImageData ? `<div class="image-preview"><img src="${currentImageData}" alt="Preview"><button type="button" class="remove-image" onclick="removeImage()">Remove Image</button></div>` : ''}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Excerpt (short preview) *</label>
+                        <textarea id="excerpt" rows="3">${escapeHtml(post.excerpt)}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Content (HTML allowed) *</label>
+                        <textarea id="content" rows="10">${escapeHtml(post.content)}</textarea>
+                    </div>
+                    <div class="row-2cols">
+                        <button onclick="savePost('draft')" style="background:#6b7280;">💾 Save as Draft</button>
+                        <button onclick="savePost('published')" style="background:#10b981;">🚀 Publish Now</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function savePost(status) {
+            const title = document.getElementById('title').value;
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
+            const excerpt = document.getElementById('excerpt').value;
+            const content = document.getElementById('content').value;
+            
+            if (!title || !date || !excerpt || !content) {
+                showMessage('Please fill all required fields', 'error');
+                return;
+            }
+            
+            let posts = getPosts();
+            
+            if (editingPostId) {
+                const index = posts.findIndex(p => p.id === editingPostId);
+                if (index !== -1) {
+                    posts[index] = { 
+                        ...posts[index], 
+                        title, 
+                        date, 
+                        category, 
+                        excerpt, 
+                        content,
+                        image: currentImageData,
+                        status: status
+                    };
+                }
+                editingPostId = null;
+                showMessage(status === 'published' ? 'Post updated and published!' : 'Post updated and saved as draft!', 'success');
+            } else {
+                const newId = Math.max(...posts.map(p => p.id), 0) + 1;
+                posts.push({ 
+                    id: newId, 
+                    title, 
+                    date, 
+                    category, 
+                    excerpt, 
+                    content,
+                    image: currentImageData,
+                    status: status
+                });
+                showMessage(status === 'published' ? 'Post published!' : 'Post saved as draft!', 'success');
+            }
+            
+            savePosts(posts);
+            currentImageData = null;
+            renderAdminPanel();
+        }
+        
+        function setFilter(filter) {
+            currentFilter = filter;
+            renderAdminPanel();
+        }
+        
+        function renderAdminPanel() {
+            let posts = getPosts();
+            
+            let filteredPosts = posts;
+            if (currentFilter === 'published') {
+                filteredPosts = posts.filter(p => p.status === 'published');
+            } else if (currentFilter === 'draft') {
+                filteredPosts = posts.filter(p => p.status === 'draft');
+            }
+            
+            const publishedCount = posts.filter(p => p.status === 'published').length;
+            const draftCount = posts.filter(p => p.status === 'draft').length;
+            
+            document.getElementById('app').innerHTML = `
+                <div class="admin-box">
+                    <div class="header">
+                        <h1>📝 Blog Admin Dashboard</h1>
+                        <div>
+                            <button onclick="renderPostForm(null)" style="width: auto; margin-right: 0.5rem;">+ New Post</button>
+                            <button class="logout-btn" onclick="logout()" style="width: auto;">Logout</button>
+                        </div>
+                    </div>
+                    <div id="message"></div>
+                    
+                    <div class="filter-buttons">
+                        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">📋 All (${posts.length})</button>
+                        <button class="filter-btn ${currentFilter === 'published' ? 'active' : ''}" onclick="setFilter('published')">✅ Published (${publishedCount})</button>
+                        <button class="filter-btn ${currentFilter === 'draft' ? 'active' : ''}" onclick="setFilter('draft')">📝 Drafts (${draftCount})</button>
+                    </div>
+                    
+                    ${filteredPosts.length === 0 ? '<p style="text-align:center; padding:2rem;">No posts found. Click "New Post" to create one.</p>' : ''}
+                    
+                    ${filteredPosts.sort((a,b) => b.id - a.id).map(post => `
+                        <div class="post-item">
+                            <div class="post-info">
+                                <strong>${escapeHtml(post.title)}</strong>
+                                <span class="status-badge ${post.status === 'published' ? 'status-published' : 'status-draft'}">
+                                    ${post.status === 'published' ? '✅ Published' : '📝 Draft'}
+                                </span>
+                                ${post.image ? '<span style="margin-left:0.5rem;">🖼️</span>' : ''}
+                                <br>
+                                <small>📅 ${post.date} | 🏷️ ${post.category}</small>
+                            </div>
+                            <div class="post-actions">
+                                <button class="edit-btn" onclick="setEditPost(${post.id})">✏️ Edit</button>
+                                ${post.status === 'published' ? 
+                                    `<button class="draft-btn" onclick="changeStatus(${post.id}, 'draft')">📝 Unpublish</button>` :
+                                    `<button class="publish-btn" onclick="changeStatus(${post.id}, 'published')">✅ Publish</button>`
+                                }
+                                <button class="delete-btn" onclick="deletePost(${post.id})">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    
+                    <div style="margin-top: 2rem; padding: 1rem; background: #f0fdf4; border-radius: 10px; font-size: 0.85rem;">
+                        💡 <strong>Image Tips:</strong><br>
+                        • Click the upload area to add an image to your post<br>
+                        • Images are stored in your browser (for testing)<br>
+                        • For live site, images will appear at the top of each blog post<br>
+                        • You can remove images by clicking "Remove Image"
+                    </div>
+                </div>
+            `;
+        }
+        
+        renderLogin();
+    </script>
+</body>
+</html>

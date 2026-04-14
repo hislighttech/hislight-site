@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIS LIGHT Technology | AI & SaaS Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary: #6b21a5;
+            --primary-dark: #581c87;
+            --primary-light: #a855f7;
+            --secondary: #f3e8ff;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a2e;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            background: none;
+            border: none;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            max-width: 300px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 20px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 5rem 2rem;
+            transition: right 0.3s ease;
+            list-style: none;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav li {
+            margin: 1.5rem 0;
+        }
+
+        .mobile-nav a {
+            text-decoration: none;
+            color: #1a1a2e;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        }
+
+        .hero-content {
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            max-width: 800px;
+            margin: 1rem auto;
+            line-height: 1.6;
+            animation: slideInRight 1s ease-out 0.3s both;
+        }
+
+        .hero-content .cta-button {
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sliding-container {
+            height: 120px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .sliding-headlines {
+            animation: slideUp 12s infinite;
+        }
+
+        .headline-slide {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        @keyframes slideUp {
+            0%, 20% { transform: translateY(0); }
+            25%, 45% { transform: translateY(-120px); }
+            50%, 70% { transform: translateY(-240px); }
+            75%, 95% { transform: translateY(-360px); }
+            100% { transform: translateY(0); }
+        }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .services, .blog-page, .training, .testimonials, .consultation, .contact {
+            padding: 5rem 2rem;
+        }
+
+        .services {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1a1a2e;
+        }
+
+        .section-title span {
+            color: var(--primary);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .blog-page {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .blog-search {
+            max-width: 500px;
+            margin: 2rem auto;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .blog-search input {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .blog-search button {
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .blog-filters {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--primary);
+            background: transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-date {
+            color: var(--primary);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-excerpt {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .training {
+            background: #faf5ff;
+        }
+
+        .training-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .program-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .program-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .program-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        .program-list {
+            list-style: none;
+        }
+
+        .program-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cohort {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .training-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+        }
+
+        .training-form h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .training-form input,
+        .training-form select,
+        .training-form textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .apply-btn, .submit-btn {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: #faf5ff;
+            padding: 2rem;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .testimonial-card:before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary-light);
+            opacity: 0.3;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+
+        .consultation {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .consultation-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .consultation h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .booking-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .booking-form input,
+        .booking-form select,
+        .booking-form textarea {
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .booking-btn {
+            background: white;
+            color: var(--primary);
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .contact-info {
+            background: #faf5ff;
+            padding: 2rem;
+            border-radius: 20px;
+        }
+
+        .contact-info p {
+            margin: 1rem 0;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .sliding-container { height: 80px; }
+            .headline-slide { height: 80px; font-size: 1.5rem; }
+            @keyframes slideUp {
+                0%, 20% { transform: translateY(0); }
+                25%, 45% { transform: translateY(-80px); }
+                50%, 70% { transform: translateY(-160px); }
+                75%, 95% { transform: translateY(-240px); }
+                100% { transform: translateY(0); }
+            }
+            .contact-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <img src="logo.jpg" alt="HIS LIGHT Technology" style="height: 45px;">
+                <span class="logo-text">HIS LIGHT Technology</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#training">Training</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#consultation">Book</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <ul class="mobile-nav" id="mobileNav">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#training">Training</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#consultation">Book</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="overlay" id="overlay"></div>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="sliding-container">
+                <div class="sliding-headlines">
+                    <div class="headline-slide">Building Intelligent Digital Solutions</div>
+                    <div class="headline-slide">AI-Powered SaaS for Modern Businesses</div>
+                    <div class="headline-slide">Scalable Apps That Drive Growth</div>
+                    <div class="headline-slide">Digital Transformation Experts</div>
+                </div>
+            </div>
+            <p>HIS LIGHT Technology is a global SaaS company delivering AI-powered solutions, scalable applications, and digital growth strategies that help businesses thrive in a fast-changing world.</p>
+            <a href="#consultation" class="cta-button">Book Free Consultation →</a>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <h2 class="section-title">Our <span>Services</span></h2>
+        <div class="services-grid">
+            <div class="service-card"><div class="service-icon">🌐</div><h3>Website Design</h3><p>Modern, responsive websites that captivate your audience.</p></div>
+            <div class="service-card"><div class="service-icon">📱</div><h3>Mobile App Development</h3><p>Native and cross-platform iOS & Android apps.</p></div>
+            <div class="service-card"><div class="service-icon">💻</div><h3>Web Application</h3><p>Scalable web apps and enterprise software solutions.</p></div>
+            <div class="service-card"><div class="service-icon">📈</div><h3>Digital Marketing</h3><p>SEO, social media, content marketing, and paid ads.</p></div>
+            <div class="service-card"><div class="service-icon">🎨</div><h3>Product Design</h3><p>UX/UI design, wireframing, and prototyping.</p></div>
+            <div class="service-card"><div class="service-icon">🎓</div><h3>Training & Internship</h3><p>Hands-on tech training and mentorship programs.</p></div>
+        </div>
+    </section>
+
+    <section id="blog" class="blog-page">
+        <div class="blog-header">
+            <h2 class="section-title">Latest <span>Insights</span></h2>
+            <p>Stay updated with the latest in tech, AI, and digital transformation</p>
+            
+            <div class="blog-search">
+                <input type="text" id="searchInput" placeholder="Search articles...">
+                <button onclick="searchBlogs()">Search</button>
+            </div>
+            
+            <div class="blog-filters" id="filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="AI">AI</button>
+                <button class="filter-btn" data-category="SaaS">SaaS</button>
+                <button class="filter-btn" data-category="Mobile">Mobile</button>
+                <button class="filter-btn" data-category="Marketing">Marketing</button>
+                <button class="filter-btn" data-category="Career">Career</button>
+            </div>
+        </div>
+        
+        <div class="blog-grid" id="blogGrid">
+            <!-- Posts load here -->
+        </div>
+    </section>
+
+    <section id="training" class="training">
+        <div class="training-container">
+            <h2 class="section-title">Training & <span>Internship</span></h2>
+            <div class="program-details">
+                <div class="program-card"><h3>📚 What You'll Learn</h3><ul class="program-list"><li>💻 Frontend Development</li><li>⚙️ Backend Development</li><li>📱 Mobile App Development</li><li>🎨 UI/UX Design</li><li>🤖 Data Science & AI</li></ul></div>
+                <div class="program-card"><h3>⏱️ Program Structure</h3><ul class="program-list"><li>📅 Duration: 3-6 months</li><li>🏠 Hybrid (Physical + Online)</li><li>👥 Small class sizes</li><li>📖 Live projects</li></ul></div>
+                <div class="program-card"><h3>🎯 What Interns Get</h3><ul class="program-list"><li>✅ Real company projects</li><li>✅ Mentorship</li><li>✅ Certificate</li><li>✅ Job placement assistance</li></ul></div>
+            </div>
+            <div class="cohort"><h3>🚀 Join the Upcoming Cohort</h3><p style="font-size: 1.8rem; font-weight: 700;">August, 2026</p><p>📢 Applications Open Now! Limited slots Available.</p></div>
+            
+            <div class="training-form">
+                <h3>🚀 Apply for Training & Internship</h3>
+                <p>Fill the form below to secure your spot. Limited slots available!</p>
+                <form id="trainingForm" action="https://formspree.io/f/myklyjgo" method="POST">
+                    <div class="form-row">
+                        <input type="text" name="name" placeholder="Full Name" required>
+                        <input type="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" name="phone" placeholder="Phone Number" required>
+                        <input type="text" name="location" placeholder="Location (City)" required>
+                    </div>
+                    <div class="form-row">
+                        <select name="program" required>
+                            <option value="">Select Program</option>
+                            <option>Frontend Development (3 months)</option>
+                            <option>Backend Development (3 months)</option>
+                            <option>Mobile App Development (3 months)</option>
+                            <option>UI/UX Design (3 months)</option>
+                            <option>Digital Marketing (3 months)</option>
+                            <option>Data Science & AI (6 months)</option>
+                            <option>Full Stack Development (6 months)</option>
+                        </select>
+                        <select name="schedule" required>
+                            <option value="">Select Preferred Schedule</option>
+                            <option>Weekdays (9am - 1pm)</option>
+                            <option>Weekdays (2pm - 6pm)</option>
+                            <option>Weekends (10am - 3pm)</option>
+                            <option>Online Only</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <select name="education" required>
+                            <option value="">Highest Level of Education</option>
+                            <option>High School</option>
+                            <option>Bachelor's Degree</option>
+                            <option>Master's Degree</option>
+                            <option>Other</option>
+                        </select>
+                        <select name="referral" required>
+                            <option value="">How did you hear about us?</option>
+                            <option>Social Media</option>
+                            <option>Friend/Referral</option>
+                            <option>Google Search</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <textarea name="message" rows="4" placeholder="Tell us about your experience (if any) and why you want to join..."></textarea>
+                    <input type="hidden" name="_subject" value="New Training Application - HIS LIGHT Technology">
+                    <input type="hidden" name="_replyto" value="email">
+                    <button type="submit" class="apply-btn">Submit Application →</button>
+                </form>
+                <div id="trainingMessage"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="testimonials-container"><h2 class="section-title">What <span>Clients Say</span></h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card"><p class="testimonial-text">"HIS LIGHT Technology transformed our online presence completely!"</p><p class="testimonial-author">— Michael Adebayo</p><p class="testimonial-role">CEO, TechDrive NG</p></div>
+            <div class="testimonial-card"><p class="testimonial-text">"The mobile app they built is outstanding. Professional team!"</p><p class="testimonial-author">— Chiamaka Okafor</p><p class="testimonial-role">Founder, ShopEasy</p></div>
+            <div class="testimonial-card"><p class="testimonial-text">"Their digital marketing doubled our sales in 3 months!"</p><p class="testimonial-author">— Oluwole Samuel</p><p class="testimonial-role">MD, Prime Realty</p></div>
+        </div></div>
+    </section>
+
+    <section id="consultation" class="consultation">
+        <div class="consultation-container">
+            <h2>📅 Book a Free Consultation</h2>
+            <p>Let's discuss your project. Choose a date and tell us about your needs.</p>
+            <form class="booking-form" id="bookingForm" action="https://formspree.io/f/maqayjqb" method="POST">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="tel" name="phone" placeholder="Phone Number">
+                <select name="service" required>
+                    <option value="">Select Service</option>
+                    <option>Website Design</option>
+                    <option>Mobile App Development</option>
+                    <option>Web Application</option>
+                    <option>Digital Marketing</option>
+                    <option>Product Design</option>
+                    <option>Training & Internship</option>
+                </select>
+                <input type="date" name="date" required>
+                <input type="time" name="time" required>
+                <textarea name="message" rows="4" placeholder="Tell us about your project..."></textarea>
+                <input type="hidden" name="_subject" value="New Consultation Booking - HIS LIGHT Technology">
+                <input type="hidden" name="_replyto" value="email">
+                <button type="submit" class="booking-btn">Schedule Consultation →</button>
+            </form>
+            <div id="bookingMessage"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2 class="section-title">Get In <span>Touch</span></h2>
+        <div class="contact-grid">
+            <div class="contact-info"><h3>📍 Visit Us</h3><p>🏢 1, Remilekun Street, Ikorodu, Lagos</p><p>📧 hislighttech@gmail.com</p><p>📞 +234 810 942 7082</p><p>📞 +234 811 062 6106</p></div>
+            <div>
+                <form class="contact-form" id="contactForm" action="https://formspree.io/f/xyklyjkb" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <input type="text" name="subject" placeholder="Subject">
+                    <textarea name="message" rows="5" placeholder="Your Message"></textarea>
+                    <input type="hidden" name="_subject" value="New Contact Message - HIS LIGHT Technology">
+                    <button type="submit" class="submit-btn">Send Message →</button>
+                </form>
+                <div id="contactMessage"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer><p>✨ HIS LIGHT Technology — Illuminating Digital Excellence</p><p>© 2026 HIS LIGHT Technology. All rights reserved.</p></footer>
+
+    <script>
+        // Blog data - will be loaded from localStorage
+        let blogPosts = [];
+        let currentFilter = "all";
+        let currentSearch = "";
+
+        function getCategoryIcon(category) {
+            const icons = { AI: "🤖", SaaS: "☁️", Mobile: "📱", Marketing: "📈", Career: "🎓" };
+            return icons[category] || "📄";
+        }
+
+       function renderBlogs() {
+    const grid = document.getElementById('blogGrid');
+    if (!grid) return;
+    
+    let filteredPosts = blogPosts.filter(post => {
+        const matchesFilter = currentFilter === "all" || post.category === currentFilter;
+        const matchesSearch = post.title.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                              (post.excerpt && post.excerpt.toLowerCase().includes(currentSearch.toLowerCase())) ||
+                              post.category.toLowerCase().includes(currentSearch.toLowerCase());
+        return matchesFilter && matchesSearch;
+    });
+
+    if (filteredPosts.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No posts found. Try a different search term.</p>';
+        return;
+    }
+
+    grid.innerHTML = filteredPosts.map(post => `
+        <a href="post.html?id=${post.id}" class="blog-card" target="_blank">
+            <div class="blog-image">
+                ${post.image ? `<img src="${post.image}" alt="${escapeHtml(post.title)}" style="width:100%; height:100%; object-fit:cover;">` : getCategoryIcon(post.category)}
+            </div>
+            <div class="blog-content">
+                <span class="blog-category">${post.category}</span>
+                <div class="blog-date">📅 ${post.date}</div>
+                <h3 class="blog-title">${escapeHtml(post.title)}</h3>
+                <p class="blog-excerpt">${post.excerpt ? post.excerpt.substring(0, 100) : ''}...</p>
+                <span class="read-more">Read More →</span>
+            </div>
+        </a>
+    `).join('');
+}
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function searchBlogs() {
+            currentSearch = document.getElementById('searchInput').value;
+            renderBlogs();
+        }
+
+      function loadBlogPosts() {
+    const stored = localStorage.getItem('blogPosts');
+    if (stored) {
+        const allPosts = JSON.parse(stored);
+        // ONLY show posts with status "published"
+        blogPosts = allPosts.filter(post => post.status === 'published');
+    } else {
+        // Default published posts only
+        blogPosts = [
+            {
+                id: 1,
+                title: "How AI is Transforming SaaS in 2026",
+                date: "2026-04-10",
+                category: "AI",
+                excerpt: "Discover the top AI trends reshaping software-as-a-service...",
+                content: "<p>Artificial Intelligence is revolutionizing the SaaS industry...</p>",
+                status: "published"
+            },
+            {
+                id: 2,
+                title: "5 Mobile App Development Trends for 2026",
+                date: "2026-04-05",
+                category: "Mobile",
+                excerpt: "From AI integration to super apps, learn what's next...",
+                content: "<p>Mobile app development is evolving rapidly...</p>",
+                status: "published"
+            }
+        ];
+        localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+    }
+    renderBlogs();
+}
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.category;
+                renderBlogs();
+            });
+        });
+
+        document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchBlogs();
+        });
+
+        // Hamburger Menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        const overlay = document.getElementById('overlay');
+        function toggleMenu() {
+            mobileNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        }
+        if (hamburger) {
+            hamburger.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+            document.querySelectorAll('.mobile-nav a').forEach(link => link.addEventListener('click', toggleMenu));
+        }
+
+        // Form handlers for AJAX submission
+        async function submitFormToFormspree(form, messageElement, successMsg) {
+            const formData = new FormData(form);
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (response.ok) {
+                    messageElement.innerHTML = `<div style="background:#10b981; color:white; padding:1rem; border-radius:10px;">${successMsg}</div>`;
+                    form.reset();
+                    setTimeout(() => messageElement.innerHTML = '', 5000);
+                } else {
+                    messageElement.innerHTML = `<div style="background:#ef4444; color:white; padding:1rem; border-radius:10px;">Error. Please try again.</div>`;
+                    setTimeout(() => messageElement.innerHTML = '', 5000);
+                }
+            } catch (error) {
+                messageElement.innerHTML = `<div style="background:#ef4444; color:white; padding:1rem; border-radius:10px;">Network error. Please try again.</div>`;
+                setTimeout(() => messageElement.innerHTML = '', 5000);
+            }
+        }
+
+        const trainingForm = document.getElementById('trainingForm');
+        const bookingForm = document.getElementById('bookingForm');
+        const contactForm = document.getElementById('contactForm');
+
+        if (trainingForm) {
+            trainingForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitFormToFormspree(trainingForm, document.getElementById('trainingMessage'), '✅ Application submitted! We\'ll contact you within 3 business days.');
+            });
+        }
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitFormToFormspree(bookingForm, document.getElementById('bookingMessage'), '✅ Consultation request sent! We\'ll contact you within 24 hours.');
+            });
+        }
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitFormToFormspree(contactForm, document.getElementById('contactMessage'), '✅ Message sent! We\'ll reply shortly.');
+            });
+        }
+
+        // Active nav highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Load blog posts
+        loadBlogPosts();
+    </script>
+    <!-- WhatsApp Floating Chat Button -->
+<style>
+    .whatsapp-float {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #25D366;
+        color: white;
+        border-radius: 50px;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 1000;
+        transition: transform 0.3s, box-shadow 0.3s;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .whatsapp-float:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        color: white;
+    }
+    
+    .whatsapp-float img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* For mobile devices */
+    @media (max-width: 768px) {
+        .whatsapp-float {
+            bottom: 15px;
+            right: 15px;
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<a href="https://wa.me/2348109427082?text=Hello%21%20I%20visited%20your%20website%20and%20I%27m%20interested%20in%20learning%20more%20about%20your%20services." 
+   class="whatsapp-float" 
+   target="_blank">
+    💬 Chat with us
+</a>
+</body>
+</html>
