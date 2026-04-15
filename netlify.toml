@@ -1,3 +1,6 @@
 [build]
   functions = "netlify/functions"
   publish = "."
+
+[context.production.environment]
+  OPENAI_API_KEY = "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"
