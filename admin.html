@@ -28,7 +28,15 @@
         .image-preview { margin-top: 0.5rem; max-width: 150px; }
         .image-preview img { width: 100%; border-radius: 8px; border: 1px solid #ddd; }
         .image-upload-area { border: 2px dashed #ddd; padding: 1rem; border-radius: 10px; text-align: center; cursor: pointer; margin-bottom: 1rem; }
+        .filter-btn { padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; transition: all 0.2s; border: none; font-weight: 500; }
+        .filter-active { background: #6b21a5; color: white; }
+        .filter-inactive { background: #e5e7eb; color: #374151; }
         @media (max-width: 768px) { .row-2cols { grid-template-columns: 1fr; } }
+        
+        /* Loading spinner */
+        .spinner-small { display: inline-block; width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -37,24 +45,73 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycby1niIziaVxD3bVgXEfPHx2DpTBcS-7W5nU2Dje8t0MOp5iSiRd8mVKv15xYO2KOV36Yg/exec";
         const PASSWORD = "admin123";
+        const CACHE_KEY = 'admin_posts_cache';
+        const CACHE_TIME_KEY = 'admin_posts_cache_time';
+        const ONE_MINUTE = 60 * 1000; // Cache for 1 minute (shorter for admin)
         
         let isLoggedIn = false;
         let blogPosts = [];
-        let editingPost = null;
+        let editingPostId = null;
         let currentImageData = null;
+        let currentFilter = 'all';
+        let isLoading = false;
 
-        async function loadPosts() {
+        // Load posts with caching
+        async function loadPosts(forceRefresh = false) {
+            if (isLoading) return blogPosts;
+            
+            // Check cache first (unless force refresh)
+            if (!forceRefresh) {
+                const cachedPosts = localStorage.getItem(CACHE_KEY);
+                const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
+                const cacheAge = cacheTime ? Date.now() - parseInt(cacheTime) : ONE_MINUTE + 1;
+                
+                if (cachedPosts && cacheAge < ONE_MINUTE) {
+                    console.log("Admin: Loading from cache");
+                    blogPosts = JSON.parse(cachedPosts);
+                    return blogPosts;
+                }
+            }
+            
+            isLoading = true;
+            
+            // Show loading indicator on buttons
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                if (btn.innerText.includes('Loading')) return;
+                btn.disabled = true;
+            });
+            
             try {
+                console.log("Admin: Fetching fresh data...");
                 const response = await fetch(API_URL);
                 blogPosts = await response.json();
+                
+                // Update cache
+                localStorage.setItem(CACHE_KEY, JSON.stringify(blogPosts));
+                localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                console.log(`Admin: Loaded ${blogPosts.length} posts`);
+                
                 return blogPosts;
             } catch (error) {
                 console.error('Error loading posts:', error);
-                return [];
+                return blogPosts;
+            } finally {
+                isLoading = false;
+                const btns = document.querySelectorAll('.filter-btn');
+                btns.forEach(btn => { if(btn) btn.disabled = false; });
             }
         }
 
         async function savePost(post) {
+            // Show saving indicator on button
+            const saveBtn = document.activeElement;
+            const originalText = saveBtn ? saveBtn.innerHTML : '';
+            if (saveBtn) {
+                saveBtn.innerHTML = '<span class="spinner-small"></span>Saving...';
+                saveBtn.disabled = true;
+            }
+            
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -62,16 +119,29 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'save', post: post })
                 });
+                
+                // Clear cache after save
+                localStorage.removeItem(CACHE_KEY);
+                localStorage.removeItem(CACHE_TIME_KEY);
+                
                 return true;
             } catch (error) {
                 console.error('Error saving post:', error);
                 return false;
+            } finally {
+                if (saveBtn) {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                }
             }
         }
 
-        async function deletePost(id) {
+        async function deletePostById(id) {
             try {
                 await fetch(`${API_URL}?action=delete&id=${id}`, { method: 'GET', mode: 'no-cors' });
+                // Clear cache after delete
+                localStorage.removeItem(CACHE_KEY);
+                localStorage.removeItem(CACHE_TIME_KEY);
                 return true;
             } catch (error) {
                 console.error('Error deleting post:', error);
@@ -89,16 +159,20 @@
 
         async function handleDelete(id) {
             if (confirm('Delete this post?')) {
-                await deletePost(id);
+                showMessage('Deleting...', 'success');
+                await deletePostById(id);
                 showMessage('Post deleted!', 'success');
-                await renderAdminPanel();
+                await renderAdminPanel(true); // Force refresh
             }
         }
 
-        function handleEdit(post) {
-            editingPost = post;
-            currentImageData = post.image || null;
-            renderPostForm();
+        function handleEdit(id) {
+            editingPostId = id;
+            const post = blogPosts.find(p => p.id === id);
+            if (post) {
+                currentImageData = post.image || null;
+                renderPostForm(post);
+            }
         }
 
         function handleImageUpload(event) {
@@ -151,26 +225,31 @@
             renderLogin();
         }
 
-        function renderPostForm() {
-            const post = editingPost || { title: '', date: new Date().toISOString().split('T')[0], category: 'AI', excerpt: '', content: '', status: 'draft', image: null };
+        function setFilter(filter) {
+            currentFilter = filter;
+            renderAdminPanel();
+        }
+
+        function renderPostForm(post = null) {
+            const p = post || { title: '', date: new Date().toISOString().split('T')[0], category: 'AI', excerpt: '', content: '', status: 'draft', image: null };
             
             document.getElementById('app').innerHTML = `
                 <div class="admin-box">
                     <div class="header">
-                        <h2>${editingPost ? '✏️ Edit Post' : '📝 Create New Post'}</h2>
+                        <h2>${editingPostId ? '✏️ Edit Post' : '📝 Create New Post'}</h2>
                         <button onclick="renderAdminPanel()">← Back</button>
                     </div>
                     <div id="message"></div>
-                    <div class="form-group"><label>Title</label><input type="text" id="title" value="${escapeHtml(post.title)}"></div>
+                    <div class="form-group"><label>Title</label><input type="text" id="title" value="${escapeHtml(p.title)}"></div>
                     <div class="row-2cols">
-                        <div class="form-group"><label>Date</label><input type="date" id="date" value="${post.date}"></div>
+                        <div class="form-group"><label>Date</label><input type="date" id="date" value="${p.date}"></div>
                         <div class="form-group"><label>Category</label>
                             <select id="category">
-                                <option value="AI" ${post.category === 'AI' ? 'selected' : ''}>AI</option>
-                                <option value="SaaS" ${post.category === 'SaaS' ? 'selected' : ''}>SaaS</option>
-                                <option value="Mobile" ${post.category === 'Mobile' ? 'selected' : ''}>Mobile</option>
-                                <option value="Marketing" ${post.category === 'Marketing' ? 'selected' : ''}>Marketing</option>
-                                <option value="Career" ${post.category === 'Career' ? 'selected' : ''}>Career</option>
+                                <option value="AI" ${p.category === 'AI' ? 'selected' : ''}>🤖 AI</option>
+                                <option value="SaaS" ${p.category === 'SaaS' ? 'selected' : ''}>☁️ SaaS</option>
+                                <option value="Mobile" ${p.category === 'Mobile' ? 'selected' : ''}>📱 Mobile</option>
+                                <option value="Marketing" ${p.category === 'Marketing' ? 'selected' : ''}>📈 Marketing</option>
+                                <option value="Career" ${p.category === 'Career' ? 'selected' : ''}>🎓 Career</option>
                             </select>
                         </div>
                     </div>
@@ -180,8 +259,8 @@
                         <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
                         <div id="imagePreview">${currentImageData ? `<div class="image-preview"><img src="${currentImageData}" alt="Preview"><button onclick="removeImage()">Remove</button></div>` : ''}</div>
                     </div>
-                    <div class="form-group"><label>Excerpt</label><textarea id="excerpt" rows="3">${escapeHtml(post.excerpt)}</textarea></div>
-                    <div class="form-group"><label>Content (HTML allowed)</label><textarea id="content" rows="10">${escapeHtml(post.content)}</textarea></div>
+                    <div class="form-group"><label>Excerpt</label><textarea id="excerpt" rows="3">${escapeHtml(p.excerpt)}</textarea></div>
+                    <div class="form-group"><label>Content (HTML allowed)</label><textarea id="content" rows="10">${escapeHtml(p.content)}</textarea></div>
                     <div class="row-2cols">
                         <button onclick="savePostData('draft')">💾 Save as Draft</button>
                         <button onclick="savePostData('published')">🚀 Publish Now</button>
@@ -212,8 +291,12 @@
                 return;
             }
             
-            let posts = await loadPosts();
-            let newId = editingPost ? editingPost.id : (posts.length > 0 ? Math.max(...posts.map(p => p.id)) + 1 : 1);
+            let newId = editingPostId;
+            if (!newId) {
+                // Get fresh posts for ID calculation
+                const freshPosts = await loadPosts(true);
+                newId = freshPosts.length > 0 ? Math.max(...freshPosts.map(p => p.id)) + 1 : 1;
+            }
             
             const newPost = {
                 id: newId,
@@ -222,56 +305,117 @@
                 status: status
             };
             
-            showMessage('Saving...', 'success');
             const success = await savePost(newPost);
             if (success) {
                 showMessage(status === 'published' ? '✅ Published!' : '✅ Draft saved!', 'success');
-                editingPost = null;
+                editingPostId = null;
                 currentImageData = null;
-                await renderAdminPanel();
+                await renderAdminPanel(true); // Force refresh
             } else {
                 showMessage('❌ Error saving. Check your API URL.', 'error');
             }
         }
 
-        async function renderAdminPanel() {
-            await loadPosts();
+        async function renderAdminPanel(forceRefresh = false) {
+            // Show loading state
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="admin-box">
+                    <div class="header">
+                        <h1>📝 Blog Admin Dashboard</h1>
+                        <div>
+                            <button disabled style="opacity:0.6;">+ New Post</button>
+                            <button disabled style="background:#6b7280; opacity:0.6;">Logout</button>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 50px;">
+                        <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6b21a5; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                        <p style="margin-top: 1rem;">Loading dashboard...</p>
+                    </div>
+                </div>
+            `;
             
+            // Load data
+            await loadPosts(forceRefresh);
+            
+            // Filter posts
+            let filteredPosts = blogPosts;
+            if (currentFilter === 'published') {
+                filteredPosts = blogPosts.filter(p => p.status === 'published');
+            } else if (currentFilter === 'draft') {
+                filteredPosts = blogPosts.filter(p => p.status === 'draft');
+            }
+            
+            const totalCount = blogPosts.length;
             const publishedCount = blogPosts.filter(p => p.status === 'published').length;
             const draftCount = blogPosts.filter(p => p.status === 'draft').length;
             
-            document.getElementById('app').innerHTML = `
+            let postsHtml = '';
+            for (const post of filteredPosts.sort((a,b) => b.id - a.id)) {
+                postsHtml += `
+                    <div class="post-item">
+                        <div>
+                            <strong>${escapeHtml(post.title)}</strong>
+                            <span class="status-badge ${post.status === 'published' ? 'status-published' : 'status-draft'}">${post.status === 'published' ? '✅ Published' : '📝 Draft'}</span>
+                            ${post.image ? ' 🖼️' : ''}
+                            <br><small>📅 ${post.date} | 🏷️ ${post.category}</small>
+                        </div>
+                        <div>
+                            <button class="edit-btn" data-id="${post.id}">✏️ Edit</button>
+                            <button class="delete-btn" data-id="${post.id}">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            app.innerHTML = `
                 <div class="admin-box">
                     <div class="header">
-                        <h1>📝 Blog Admin</h1>
+                        <h1>📝 Blog Admin Dashboard</h1>
                         <div>
-                            <button onclick="editingPost=null; currentImageData=null; renderPostForm()">+ New Post</button>
-                            <button onclick="logout()" style="background:#6b7280;">Logout</button>
+                            <button id="newPostBtn">+ New Post</button>
+                            <button id="logoutBtn" style="background:#6b7280;">Logout</button>
                         </div>
                     </div>
                     <div id="message"></div>
-                    <div style="margin-bottom: 1rem;">
-                        <span>📋 Total: ${blogPosts.length} | </span>
-                        <span style="color:#10b981;">✅ Published: ${publishedCount}</span>
-                        <span style="margin-left: 1rem; color:#f59e0b;">📝 Drafts: ${draftCount}</span>
+                    
+                    <!-- Filter Buttons -->
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <button id="filterAllBtn" class="filter-btn ${currentFilter === 'all' ? 'filter-active' : 'filter-inactive'}">📋 All (${totalCount})</button>
+                        <button id="filterPublishedBtn" class="filter-btn ${currentFilter === 'published' ? 'filter-active' : 'filter-inactive'}" style="${currentFilter === 'published' ? 'background:#10b981;' : ''}">✅ Published (${publishedCount})</button>
+                        <button id="filterDraftBtn" class="filter-btn ${currentFilter === 'draft' ? 'filter-active' : 'filter-inactive'}" style="${currentFilter === 'draft' ? 'background:#f59e0b;' : ''}">📝 Drafts (${draftCount})</button>
                     </div>
-                    ${blogPosts.length === 0 ? '<p>No posts yet. Click "New Post" to create one.</p>' : ''}
-                    ${blogPosts.sort((a,b) => b.id - a.id).map(post => `
-                        <div class="post-item">
-                            <div>
-                                <strong>${escapeHtml(post.title)}</strong>
-                                <span class="status-badge ${post.status === 'published' ? 'status-published' : 'status-draft'}">${post.status === 'published' ? '✅ Published' : '📝 Draft'}</span>
-                                ${post.image ? ' 🖼️' : ''}
-                                <br><small>📅 ${post.date} | 🏷️ ${post.category}</small>
-                            </div>
-                            <div>
-                                <button class="edit-btn" onclick='handleEdit(${JSON.stringify(post).replace(/</g, '\\u003c')})'>✏️ Edit</button>
-                                <button class="delete-btn" onclick="handleDelete(${post.id})">🗑️ Delete</button>
-                            </div>
-                        </div>
-                    `).join('')}
+                    
+                    ${filteredPosts.length === 0 ? '<p style="text-align:center; padding:2rem;">No posts found. Click "New Post" to create one.</p>' : postsHtml}
                 </div>
             `;
+            
+            // Attach event listeners
+            document.getElementById('newPostBtn').addEventListener('click', () => {
+                editingPostId = null;
+                currentImageData = null;
+                renderPostForm();
+            });
+            
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            document.getElementById('filterAllBtn').addEventListener('click', () => setFilter('all'));
+            document.getElementById('filterPublishedBtn').addEventListener('click', () => setFilter('published'));
+            document.getElementById('filterDraftBtn').addEventListener('click', () => setFilter('draft'));
+            
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    handleEdit(id);
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    handleDelete(id);
+                });
+            });
         }
 
         renderLogin();
