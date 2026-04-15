@@ -9,7 +9,6 @@
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #1a1a2e; background: #ffffff; }
         :root { --primary: #6b21a5; --primary-dark: #581c87; --primary-light: #a855f7; }
         
-        /* Navigation */
         nav { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 0.8rem 1rem; position: sticky; top: 0; z-index: 100; }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; gap: 8px; }
@@ -17,32 +16,31 @@
         .logo-text { font-size: 1rem; font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .back-link a { color: var(--primary); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
         
-        /* Post Container */
         .post-container { max-width: 800px; margin: 1rem auto; padding: 0 1rem; }
         .post-category { display: inline-block; background: #f3e8ff; color: var(--primary); padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.75rem; margin-bottom: 0.8rem; }
         .post-title { font-size: 1.8rem; margin-bottom: 0.8rem; color: var(--primary); line-height: 1.3; }
-        .post-date { color: #666; font-size: 0.85rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+        
+        .post-meta { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; color: #666; font-size: 0.85rem; }
+        .post-date, .post-read-time, .post-views { display: flex; align-items: center; gap: 0.3rem; }
+        .post-meta-divider { color: #ddd; }
+        
         .post-content { font-size: 1rem; line-height: 1.7; }
         .post-content p { margin-bottom: 1.2rem; }
         .post-content h2 { font-size: 1.4rem; margin: 1.5rem 0 0.8rem; color: var(--primary); }
         .post-content img { max-width: 100%; height: auto; border-radius: 12px; }
         
-        /* Like Button */
         .like-section { display: flex; align-items: center; justify-content: flex-start; margin: 1rem 0; padding: 0.5rem 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
         .like-btn { display: flex; align-items: center; gap: 8px; background: none; border: none; font-size: 1rem; cursor: pointer; padding: 8px 16px; border-radius: 50px; transition: all 0.2s; color: #666; }
         .like-btn:hover { background: #fef2f2; transform: scale(1.02); }
         .like-btn.liked { color: #e11d48; }
-        .like-btn.liked .heart-icon { animation: heartBeat 0.3s ease; }
         .heart-icon { font-size: 1.4rem; transition: transform 0.2s; }
         .like-count { font-size: 0.9rem; font-weight: 500; }
         @keyframes heartBeat { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
-        /* Share Button */
         .share-section { margin: 1rem 0; }
         .share-btn-main { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #1a1a2e; color: white; padding: 0.9rem; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
         .share-btn-main:hover { transform: scale(1.02); }
         
-        /* Share Modal */
         .share-modal { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-radius: 20px 20px 0 0; z-index: 1000; padding: 1.5rem; box-shadow: 0 -5px 30px rgba(0,0,0,0.2); animation: slideUp 0.3s ease; }
         .share-modal.active { display: block; }
         .share-modal h4 { font-size: 1.2rem; margin-bottom: 1rem; color: #333; }
@@ -55,7 +53,6 @@
         .overlay.active { display: block; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        /* Related Posts */
         .related-posts { margin: 1.5rem 0; padding: 1rem; background: #faf5ff; border-radius: 16px; }
         .related-posts h4 { font-size: 1.1rem; margin-bottom: 1rem; color: #6b21a5; }
         .related-grid { display: flex; flex-direction: column; gap: 0.8rem; }
@@ -63,21 +60,16 @@
         .related-card:hover { transform: translateY(-2px); }
         .related-title { font-weight: 600; margin-bottom: 0.3rem; font-size: 0.9rem; }
         .related-category { font-size: 0.65rem; color: #6b21a5; background: #f3e8ff; display: inline-block; padding: 0.15rem 0.5rem; border-radius: 20px; }
-        .ai-badge { font-size: 0.6rem; background: linear-gradient(135deg, #6b21a5 0%, #a855f7 100%); color: white; padding: 0.15rem 0.5rem; border-radius: 20px; margin-left: 0.5rem; vertical-align: middle; }
         
-        /* CTA Box */
         .cta-box { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; padding: 1.5rem; border-radius: 16px; text-align: center; margin: 1.5rem 0; }
         .cta-box h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
         .cta-box a { display: inline-block; background: white; color: var(--primary); padding: 0.7rem 1.5rem; border-radius: 50px; text-decoration: none; font-weight: 600; margin-top: 0.8rem; font-size: 0.9rem; }
         
-        /* Footer */
         footer { background: #1a1a2e; color: white; text-align: center; padding: 1.5rem; margin-top: 2rem; font-size: 0.8rem; }
         
-        /* Spinner */
         .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6b21a5; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Tablet and Desktop */
         @media (min-width: 768px) {
             .post-container { padding: 0 2rem; margin: 2rem auto; }
             .post-title { font-size: 2.5rem; }
@@ -106,43 +98,24 @@
     </div>
 
     <footer>
-        <p>HIS LIGHT Technology — Illuminating Digital Excellence</p>
+        <p>✨ HIS LIGHT Technology — Illuminating Digital Excellence</p>
         <p>© 2026 HIS LIGHT Technology. All rights reserved.</p>
     </footer>
 
-    <!-- Share Modal -->
     <div class="overlay" id="shareOverlay"></div>
     <div class="share-modal" id="shareModal">
         <span class="close-modal" id="closeModal">&times;</span>
         <h4>📤 Share this article</h4>
         <div class="share-options">
-            <button class="share-option" id="copyLinkBtn">
-                <span class="icon">🔗</span>
-                <span>Copy Link</span>
-            </button>
-            <a href="#" id="shareFacebook" class="share-option" target="_blank">
-                <span class="icon">📘</span>
-                <span>Share on Facebook</span>
-            </a>
-            <a href="#" id="shareTwitter" class="share-option" target="_blank">
-                <span class="icon">🐦</span>
-                <span>Share on X (Twitter)</span>
-            </a>
-            <a href="#" id="shareLinkedin" class="share-option" target="_blank">
-                <span class="icon">🔗</span>
-                <span>Share on LinkedIn</span>
-            </a>
-            <a href="#" id="shareWhatsApp" class="share-option" target="_blank">
-                <span class="icon">💬</span>
-                <span>Share on WhatsApp</span>
-            </a>
+            <button class="share-option" id="copyLinkBtn"><span class="icon">🔗</span><span>Copy Link</span></button>
+            <a href="#" id="shareFacebook" class="share-option" target="_blank"><span class="icon">📘</span><span>Share on Facebook</span></a>
+            <a href="#" id="shareTwitter" class="share-option" target="_blank"><span class="icon">🐦</span><span>Share on X (Twitter)</span></a>
+            <a href="#" id="shareLinkedin" class="share-option" target="_blank"><span class="icon">🔗</span><span>Share on LinkedIn</span></a>
+            <a href="#" id="shareWhatsApp" class="share-option" target="_blank"><span class="icon">💬</span><span>Share on WhatsApp</span></a>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // CONFIGURATION
-        // ============================================
         const API_URL = "https://script.google.com/macros/s/AKfycby1niIziaVxD3bVgXEfPHx2DpTBcS-7W5nU2Dje8t0MOp5iSiRd8mVKv15xYO2KOV36Yg/exec";
         const CACHE_KEY = 'blog_posts_cache';
         const CACHE_TIME_KEY = 'blog_posts_cache_time';
@@ -151,9 +124,40 @@
         let currentShareUrl = '';
         let currentShareTitle = '';
 
-        // ============================================
-        // LIKE BUTTON FUNCTIONS
-        // ============================================
+        // Format date professionally
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Calculate read time
+        function calculateReadTime(content) {
+            const text = content.replace(/<[^>]*>/g, '');
+            const wordCount = text.split(/\s+/).length;
+            return Math.max(1, Math.ceil(wordCount / 200));
+        }
+
+        // View counter functions
+        function getViews(postId) {
+            const stored = localStorage.getItem(`views_${postId}`);
+            return stored ? parseInt(stored) : 0;
+        }
+
+        function incrementViews(postId) {
+            const currentViews = getViews(postId);
+            const hasViewed = sessionStorage.getItem(`viewed_${postId}`);
+            
+            if (!hasViewed) {
+                const newViews = currentViews + 1;
+                localStorage.setItem(`views_${postId}`, newViews.toString());
+                sessionStorage.setItem(`viewed_${postId}`, 'true');
+                return newViews;
+            }
+            return currentViews;
+        }
+
+        // Like functions
         function getLikes(postId) {
             const stored = localStorage.getItem(`likes_${postId}`);
             return stored ? parseInt(stored) : 0;
@@ -177,20 +181,11 @@
             const likeTextSpan = document.getElementById('likeText');
             
             if (likeBtn) {
-                if (isLiked) {
-                    likeBtn.classList.add('liked');
-                } else {
-                    likeBtn.classList.remove('liked');
-                }
+                if (isLiked) likeBtn.classList.add('liked');
+                else likeBtn.classList.remove('liked');
             }
-            
-            if (likeCountSpan) {
-                likeCountSpan.textContent = likeCount;
-            }
-            
-            if (likeTextSpan) {
-                likeTextSpan.textContent = likeCount === 1 ? 'Like' : 'Likes';
-            }
+            if (likeCountSpan) likeCountSpan.textContent = likeCount;
+            if (likeTextSpan) likeTextSpan.textContent = likeCount === 1 ? 'Like' : 'Likes';
         }
 
         function handleLike(postId) {
@@ -207,7 +202,6 @@
                 saveLikes(postId, newLikes);
                 setUserLiked(postId, true);
                 updateLikeButton(postId, newLikes, true);
-                
                 const heartIcon = document.querySelector('#likeBtn .heart-icon');
                 if (heartIcon) {
                     heartIcon.style.animation = 'none';
@@ -217,27 +211,23 @@
             }
         }
 
-        // ============================================
-        // SHARE FUNCTIONS
-        // ============================================
+        // Share functions
         function openShareModal(url, title) {
             currentShareUrl = url;
             currentShareTitle = title;
-            
             document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
             document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
             document.getElementById('shareLinkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
             document.getElementById('shareWhatsApp').href = `https://wa.me/?text=${encodeURIComponent(title + ' - ' + url)}`;
-            
             document.getElementById('shareModal').classList.add('active');
             document.getElementById('shareOverlay').classList.add('active');
         }
-        
+
         function closeShareModal() {
             document.getElementById('shareModal').classList.remove('active');
             document.getElementById('shareOverlay').classList.remove('active');
         }
-        
+
         async function copyLinkToClipboard() {
             try {
                 await navigator.clipboard.writeText(currentShareUrl);
@@ -248,135 +238,61 @@
             }
         }
 
-        // ============================================
-        // LOAD POSTS WITH CACHING
-        // ============================================
+        // Load posts with cache
         async function loadPostsWithCache() {
             const cachedPosts = localStorage.getItem(CACHE_KEY);
             const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
             const cacheAge = cacheTime ? Date.now() - parseInt(cacheTime) : ONE_HOUR + 1;
             
             if (cachedPosts && cacheAge < ONE_HOUR) {
-                console.log("✅ Using cached posts");
                 return JSON.parse(cachedPosts);
             }
             
-            console.log("📡 Fetching fresh posts...");
             const response = await fetch(API_URL);
             const posts = await response.json();
-            
             localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
             localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-            
             return posts;
         }
 
-        // ============================================
-        // AI POWERED RELATED POSTS
-        // ============================================
-       async function loadAIRelatedPosts(currentPost, allPosts) {
-    const relatedContainer = document.getElementById('relatedPostsContainer');
-    if (!relatedContainer) return;
-    
-    // Filter out current post and only published posts
-    const candidatePosts = allPosts.filter(p => 
-        parseInt(p.id) !== parseInt(currentPost.id) && 
-        p.status === 'published'
-    );
-    
-    if (candidatePosts.length === 0) {
-        relatedContainer.innerHTML = '';
-        return;
-    }
-    
-    // Show loading state
-    relatedContainer.innerHTML = `
-        <div class="related-posts">
-            <h4>📚 You Might Also Like <span class="ai-badge">🤖 AI is thinking...</span></h4>
-            <div style="text-align: center; padding: 15px;">
-                <div class="spinner" style="width: 25px; height: 25px;"></div>
-                <p style="font-size: 0.8rem; margin-top: 8px;">Finding relevant articles...</p>
-            </div>
-        </div>
-    `;
-    
-    try {
-        // Call the Netlify function
-        const response = await fetch('/.netlify/functions/related-posts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                currentPost: {
-                    id: currentPost.id,
-                    title: currentPost.title,
-                    category: currentPost.category,
-                    content: currentPost.content.substring(0, 1000)
-                },
-                allPosts: candidatePosts.map(p => ({
-                    id: p.id,
-                    title: p.title,
-                    category: p.category,
-                    date: p.date,
-                    excerpt: (p.excerpt || '').substring(0, 200),
-                    status: p.status
-                }))
-            })
-        });
-        
-        const data = await response.json();
-        const recommendations = data.recommendations || [];
-        
-        if (recommendations.length === 0) {
-            relatedContainer.innerHTML = '';
-            return;
+        // AI Related Posts
+        async function loadAIRelatedPosts(currentPost, allPosts) {
+            const relatedContainer = document.getElementById('relatedPostsContainer');
+            if (!relatedContainer) return;
+            
+            const candidatePosts = allPosts.filter(p => parseInt(p.id) !== parseInt(currentPost.id) && p.status === 'published');
+            if (candidatePosts.length === 0) { relatedContainer.innerHTML = ''; return; }
+            
+            relatedContainer.innerHTML = `<div class="related-posts"><h4>📚 You Might Also Like</h4><div style="text-align: center; padding: 15px;"><div class="spinner" style="width: 25px; height: 25px;"></div><p style="font-size: 0.8rem; margin-top: 8px;">Finding recommendations...</p></div></div>`;
+            
+            try {
+                const response = await fetch('/.netlify/functions/related-posts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        currentPost: { id: currentPost.id, title: currentPost.title, category: currentPost.category, content: currentPost.content },
+                        allPosts: candidatePosts.map(p => ({ id: p.id, title: p.title, category: p.category, date: p.date, excerpt: p.excerpt, status: p.status }))
+                    })
+                });
+                const data = await response.json();
+                const recommendations = data.recommendations || [];
+                if (recommendations.length === 0) { relatedContainer.innerHTML = ''; return; }
+                relatedContainer.innerHTML = `<div class="related-posts"><h4>📚 You Might Also Like <span style="font-size:0.6rem; background:#6b21a5; color:white; padding:0.15rem 0.5rem; border-radius:20px; margin-left:0.5rem;">🤖 AI</span></h4><div class="related-grid">${recommendations.map(post => `<a href="post.html?id=${post.id}" class="related-card"><div class="related-title">${escapeHtml(post.title)}</div><span class="related-category">${post.category}</span><span style="font-size:0.65rem; color:#999; margin-left:0.5rem;">📅 ${post.date}</span></a>`).join('')}</div></div>`;
+            } catch (error) { relatedContainer.innerHTML = ''; }
         }
-        
-        // Display AI recommendations
-        relatedContainer.innerHTML = `
-            <div class="related-posts">
-                <h4>📚 You Might Also Like <span class="ai-badge">🤖 AI Recommended</span></h4>
-                <div class="related-grid">
-                    ${recommendations.map(post => `
-                        <a href="post.html?id=${post.id}" class="related-card">
-                            <div class="related-title">${escapeHtml(post.title)}</div>
-                            <div>
-                                <span class="related-category">${post.category}</span>
-                                <span style="font-size: 0.7rem; color: #999; margin-left: 0.5rem;">📅 ${post.date}</span>
-                            </div>
-                        </a>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-        
-    } catch (error) {
-        console.error('AI error:', error);
-        relatedContainer.innerHTML = '';
-    }
-}
-        // ============================================
-        // LOAD AND DISPLAY POST
-        // ============================================
+
+        // Load and display post
         async function loadPost() {
             const urlParams = new URLSearchParams(window.location.search);
             const postId = urlParams.get('id');
-            
-            if (!postId) {
-                document.getElementById('postContent').innerHTML = `<h1>No Post Specified</h1><p><a href="index.html#blog">← Back to Blog</a></p>`;
-                return;
-            }
+            if (!postId) { document.getElementById('postContent').innerHTML = `<h1>No Post Specified</h1><p><a href="index.html#blog">← Back to Blog</a></p>`; return; }
             
             try {
                 const allPosts = await loadPostsWithCache();
                 const post = allPosts.find(p => parseInt(p.id) === parseInt(postId) && p.status === 'published');
-                
-                if (post) {
-                    displayPost(post, allPosts);
-                } else {
-                    document.getElementById('postContent').innerHTML = `<h1>Post Not Found</h1><a href="index.html#blog">← Back to Blog</a>`;
-                }
+                if (post) { displayPost(post, allPosts); }
+                else { document.getElementById('postContent').innerHTML = `<h1>Post Not Found</h1><a href="index.html#blog">← Back to Blog</a>`; }
             } catch (error) {
-                console.error('Error:', error);
                 document.getElementById('postContent').innerHTML = `<h1>Error Loading Post</h1><p>${error.message}</p><a href="index.html#blog">← Back to Blog</a>`;
             }
         }
@@ -384,11 +300,14 @@
         function displayPost(post, allPosts) {
             document.title = `${post.title} | HIS LIGHT Technology`;
             
+            const formattedDate = formatDate(post.date);
+            const readTime = calculateReadTime(post.content);
+            let viewCount = getViews(post.id);
+            viewCount = incrementViews(post.id);
+            
             let imageHtml = '';
             if (post.image && post.image !== 'null' && post.image !== '') {
-                imageHtml = `<div style="text-align: center; margin-bottom: 1.5rem;">
-                                <img src="${post.image}" alt="${escapeHtml(post.title)}" style="max-width: 100%; border-radius: 16px;">
-                            </div>`;
+                imageHtml = `<div style="text-align: center; margin-bottom: 1.5rem;"><img src="${post.image}" alt="${escapeHtml(post.title)}" style="max-width: 100%; border-radius: 16px;"></div>`;
             }
             
             const postUrl = window.location.href;
@@ -400,7 +319,13 @@
             const postHTML = `
                 <span class="post-category">${post.category}</span>
                 <h1 class="post-title">${escapeHtml(post.title)}</h1>
-                <div class="post-date">📅 ${post.date}</div>
+                <div class="post-meta">
+                    <span class="post-date">📅 ${formattedDate}</span>
+                    <span class="post-meta-divider">•</span>
+                    <span class="post-read-time">⏱️ ${readTime} min read</span>
+                    <span class="post-meta-divider">•</span>
+                    <span class="post-views">👁️ ${viewCount} ${viewCount === 1 ? 'view' : 'views'}</span>
+                </div>
                 ${imageHtml}
                 <div class="post-content">${post.content}</div>
                 
@@ -413,29 +338,21 @@
                 </div>
                 
                 <div class="share-section">
-                    <button class="share-btn-main" id="mainShareBtn">
-                        📤 Share this article
-                    </button>
+                    <button class="share-btn-main" id="mainShareBtn">📤 Share this article</button>
                 </div>
                 
                 <div id="relatedPostsContainer"></div>
                 
                 <div class="cta-box">
                     <h3>Ready to Transform Your Business?</h3>
-                    <p>Let's discuss how HIS LIGHT Tech can help you achieve your goals.</p>
+                    <p>Let's discuss how HIS LIGHT Technology can help you achieve your goals.</p>
                     <a href="index.html#consultation">Book a Free Consultation →</a>
                 </div>
             `;
             
             document.getElementById('postContent').innerHTML = postHTML;
             
-            // Attach share button event
-            const shareBtn = document.getElementById('mainShareBtn');
-            if (shareBtn) {
-                shareBtn.addEventListener('click', () => openShareModal(postUrl, postTitle));
-            }
-            
-            // Load AI recommendations
+            document.getElementById('mainShareBtn').addEventListener('click', () => openShareModal(postUrl, postTitle));
             loadAIRelatedPosts(post, allPosts);
         }
         
@@ -446,12 +363,10 @@
             return div.innerHTML;
         }
         
-        // Event listeners for share modal
         document.getElementById('closeModal').addEventListener('click', closeShareModal);
         document.getElementById('shareOverlay').addEventListener('click', closeShareModal);
         document.getElementById('copyLinkBtn').addEventListener('click', copyLinkToClipboard);
         
-        // Start loading
         loadPost();
     </script>
 </body>
