@@ -1,4 +1,3 @@
-// netlify/functions/related-posts.js
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method Not Allowed' };
@@ -16,21 +15,22 @@ exports.handler = async (event) => {
             return { statusCode: 200, body: JSON.stringify({ recommendations: [] }) };
         }
         
-        let prompt = `Find the 3 most relevant articles for a reader who just finished reading:
+        // Build prompt for OpenAI
+        let prompt = `You are a content recommendation engine. Based on the current article, find the 3 most relevant articles from the list below.
 
 CURRENT ARTICLE:
-Title: "${currentPost.title}"
+Title: ${currentPost.title}
 Category: ${currentPost.category}
-Content: ${currentPost.content.substring(0, 500)}
+Content: ${currentPost.content.substring(0, 800)}
 
-RECOMMEND FROM THESE ARTICLES (choose only from these):
+AVAILABLE ARTICLES (choose ONLY from these):
+
 `;
-
         candidates.forEach((p, i) => {
-            prompt += `${i+1}. "${p.title}" (${p.category})\n`;
+            prompt += `${i+1}. Title: ${p.title}\n   Category: ${p.category}\n   Excerpt: ${(p.excerpt || '').substring(0, 150)}\n\n`;
         });
 
-        prompt += `\nReturn ONLY the numbers of the 3 most relevant articles, separated by commas. Example: "2,5,1"`;
+        prompt += `Return ONLY the numbers of the 3 most relevant articles, separated by commas. Example: "2,5,1"`;
 
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -49,6 +49,7 @@ RECOMMEND FROM THESE ARTICLES (choose only from these):
         const data = await response.json();
         
         if (data.error) {
+            console.error('OpenAI Error:', data.error);
             return { statusCode: 200, body: JSON.stringify({ recommendations: [] }) };
         }
         
@@ -66,6 +67,7 @@ RECOMMEND FROM THESE ARTICLES (choose only from these):
         };
         
     } catch (error) {
+        console.error('Error:', error);
         return { statusCode: 200, body: JSON.stringify({ recommendations: [] }) };
     }
 };

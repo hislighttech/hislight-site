@@ -274,79 +274,86 @@
         // ============================================
         // AI POWERED RELATED POSTS
         // ============================================
-        async function loadAIRelatedPosts(currentPost, allPosts) {
-            const relatedContainer = document.getElementById('relatedPostsContainer');
-            if (!relatedContainer) return;
-            
-            const candidatePosts = allPosts.filter(p => 
-                parseInt(p.id) !== parseInt(currentPost.id) && 
-                p.status === 'published'
-            );
-            
-            if (candidatePosts.length === 0) {
-                relatedContainer.innerHTML = '';
-                return;
-            }
-            
-            relatedContainer.innerHTML = `
-                <div class="related-posts">
-                    <h4>📚 You Might Also Like <span class="ai-badge">🤖 AI</span></h4>
-                    <div style="text-align: center; padding: 15px;">
-                        <div class="spinner" style="width: 25px; height: 25px;"></div>
-                        <p style="font-size: 0.8rem; margin-top: 8px;">Finding recommendations...</p>
-                    </div>
-                </div>
-            `;
-            
-            try {
-                const response = await fetch('/.netlify/functions/related-posts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        currentPost: {
-                            id: currentPost.id,
-                            title: currentPost.title,
-                            category: currentPost.category,
-                            content: currentPost.content
-                        },
-                        allPosts: candidatePosts.map(p => ({
-                            id: p.id,
-                            title: p.title,
-                            category: p.category,
-                            date: p.date,
-                            status: p.status
-                        }))
-                    })
-                });
-                
-                const data = await response.json();
-                const recommendations = data.recommendations || [];
-                
-                if (recommendations.length === 0) {
-                    relatedContainer.innerHTML = '';
-                    return;
-                }
-                
-                relatedContainer.innerHTML = `
-                    <div class="related-posts">
-                        <h4>📚 You Might Also Like <span class="ai-badge">🤖 AI Recommended</span></h4>
-                        <div class="related-grid">
-                            ${recommendations.map(post => `
-                                <a href="post.html?id=${post.id}" class="related-card">
-                                    <div class="related-title">${escapeHtml(post.title)}</div>
-                                    <span class="related-category">${post.category}</span>
-                                    <span style="font-size: 0.65rem; color: #999; margin-left: 0.5rem;">📅 ${post.date}</span>
-                                </a>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                console.error("AI failed:", error);
-                relatedContainer.innerHTML = '';
-            }
+       async function loadAIRelatedPosts(currentPost, allPosts) {
+    const relatedContainer = document.getElementById('relatedPostsContainer');
+    if (!relatedContainer) return;
+    
+    // Filter out current post and only published posts
+    const candidatePosts = allPosts.filter(p => 
+        parseInt(p.id) !== parseInt(currentPost.id) && 
+        p.status === 'published'
+    );
+    
+    if (candidatePosts.length === 0) {
+        relatedContainer.innerHTML = '';
+        return;
+    }
+    
+    // Show loading state
+    relatedContainer.innerHTML = `
+        <div class="related-posts">
+            <h4>📚 You Might Also Like <span class="ai-badge">🤖 AI is thinking...</span></h4>
+            <div style="text-align: center; padding: 15px;">
+                <div class="spinner" style="width: 25px; height: 25px;"></div>
+                <p style="font-size: 0.8rem; margin-top: 8px;">Finding relevant articles...</p>
+            </div>
+        </div>
+    `;
+    
+    try {
+        // Call the Netlify function
+        const response = await fetch('/.netlify/functions/related-posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                currentPost: {
+                    id: currentPost.id,
+                    title: currentPost.title,
+                    category: currentPost.category,
+                    content: currentPost.content.substring(0, 1000)
+                },
+                allPosts: candidatePosts.map(p => ({
+                    id: p.id,
+                    title: p.title,
+                    category: p.category,
+                    date: p.date,
+                    excerpt: (p.excerpt || '').substring(0, 200),
+                    status: p.status
+                }))
+            })
+        });
+        
+        const data = await response.json();
+        const recommendations = data.recommendations || [];
+        
+        if (recommendations.length === 0) {
+            relatedContainer.innerHTML = '';
+            return;
         }
-
+        
+        // Display AI recommendations
+        relatedContainer.innerHTML = `
+            <div class="related-posts">
+                <h4>📚 You Might Also Like <span class="ai-badge">🤖 AI Recommended</span></h4>
+                <div class="related-grid">
+                    ${recommendations.map(post => `
+                        <a href="post.html?id=${post.id}" class="related-card">
+                            <div class="related-title">${escapeHtml(post.title)}</div>
+                            <div>
+                                <span class="related-category">${post.category}</span>
+                                <span style="font-size: 0.7rem; color: #999; margin-left: 0.5rem;">📅 ${post.date}</span>
+                            </div>
+                        </a>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        
+    } catch (error) {
+        console.error('AI error:', error);
+        relatedContainer.innerHTML = '';
+    }
+}
         // ============================================
         // LOAD AND DISPLAY POST
         // ============================================
