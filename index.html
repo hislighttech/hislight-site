@@ -24,7 +24,7 @@
         }
 
         :root {
-            --primary: #6b21a5;
+            --primary: #6b257d;
             --primary-dark: #581c87;
             --primary-light: #a855f7;
             --secondary: #f3e8ff;
@@ -65,7 +65,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            color: #6b257d;
         }
 
         /* Desktop Navigation */
@@ -144,11 +144,15 @@
             text-align: center;
             padding: 6rem 2rem 4rem;
             background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            background-image: url("hero-background-image.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
         }
         .hero-content { animation: slideInLeft 1s ease-out; }
         .hero-content p {
             font-size: 1.2rem;
-            color: #4a5568;
+            font-weight: bold;
+            color: #ffffff;
             max-width: 800px;
             margin: 1rem auto;
             animation: slideInRight 1s ease-out 0.3s both;
@@ -691,7 +695,9 @@
             <div class="program-card"><h3>⏱️ Program Structure</h3><ul class="program-list"><li>📅 Duration: 3-6 months</li><li>🏠 Hybrid (Physical + Online)</li><li>👥 Small class sizes</li><li>📖 Live projects</li></ul></div>
             <div class="program-card"><h3>🎯 What Interns Get</h3><ul class="program-list"><li>✅ Real company projects</li><li>✅ Mentorship</li><li>✅ Certificate</li><li>✅ Job placement assistance</li></ul></div>
         </div>
-        <div class="cohort"><h2>Join the Upcoming Cohort</h2><p style="font-size: 1.8rem; font-weight: 700;">August, 2026</p><p>Applications Open Now! Limited slots Available.</p></div>
+        <div class="cohort"><h2>Join the Upcoming Cohort</h2>
+            <!-- <p style="font-size: 1.8rem; font-weight: 700;">August, 2026</p> -->
+            <p>Applications Open Now! Limited slots Available.</p></div>
         <div class="training-form">
             <h3>Apply for Training & Internship</h3>
             <p>Fill the form below to secure your spot. Limited slots available!</p>
